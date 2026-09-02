@@ -19,7 +19,7 @@ WEEKLIES = [
         "note_path": "lab-notes/week01.md",
         "ask": "The three ways you made the page about yourself.",
         "module": "Week 1 · GitHub and playground (2 Sep)",
-        "preamble": "Own repo, GitHub Pages on it, then the same index.html as the default on your fork.",
+        "preamble": "Own repo, GitHub Pages, then fork the whole class repo and replace only index.html.",
     },
     {
         "n": 2,

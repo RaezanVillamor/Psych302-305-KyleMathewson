@@ -19,7 +19,7 @@ WEEKLIES = [
         "note_path": "lab-notes/week01.md",
         "ask": "The three ways you made the page about yourself.",
         "module": "Week 1 · GitHub and playground (2 Sep)",
-        "preamble": "Own repo, Pages, fork the whole class repo, then a practice PR we will not merge.",
+        "preamble": "Own repo, Pages, fork the whole class repo, then a PR. The coolest one becomes the homepage.",
     },
     {
         "n": 2,

@@ -2,30 +2,38 @@
 
 University of Alberta, Fall 2026. Cross-listed Science (302) and Arts (305). Wednesday 18:00–21:00.
 
-**Canvas** is the official course (assignments, grades, announcements): course 35483.
+The course teaches **computing tools** (repository, Codespace, git, data files, written reports) using **ordinary psychology** as the examples (reaction time, inventories, descriptives, documentation). It is not a survey of mathematical psychology.
 
-**This repository** is the laboratory handbook and the working pages:
-https://kylemath.github.io/Psych302-305-KyleMathewson/
+**Canvas** is the official course: https://canvas.ualberta.ca/courses/35483
 
-Week 0 (GitHub username) is only on Canvas: https://canvas.ualberta.ca/courses/35483/assignments/812211
+**Handbook:** https://kylemath.github.io/Psych302-305-KyleMathewson/
 
-| Week | Date | Laboratory | Page |
-| --- | --- | --- | --- |
-| 0 | before 2 Sep | GitHub username | Canvas |
-| 1 | 2 Sep | HTML, CSS, JavaScript | [playground.html](playground.html) |
-| 2 | 9 Sep | Visual search / reaction time | [search.html](search.html) |
-| 3 | 16 Sep | Signal detection | [sdt.html](sdt.html) |
-| 4–7 | 23 Sep–21 Oct | Threshold, RSVP, learning, memory | to be added |
-| 8–12 | 28 Oct–2 Dec | Modification, uncertainty, project | see [schedule.html](schedule.html) |
+Week 0 (GitHub username): https://canvas.ualberta.ca/courses/35483/assignments/812211
+
+| Week | Date | Tool | Example | Page |
+| --- | --- | --- | --- | --- |
+| 0 | before 2 Sep | GitHub account | — | Canvas |
+| 1 | 2 Sep | Codespace, commit, push | A web page as a notebook | [playground.html](playground.html) |
+| 2 | 9 Sep | Timed response, CSV | Simple / choice RT | [rt.html](rt.html) |
+| 3 | 16 Sep | Form and score | Short inventory | to be added |
+| 4 | 23 Sep | Descriptives | Mean, SD, histogram | to be added |
+| 5 | 7 Oct | Two-condition comparison | Simple vs choice, or two subscales | to be added |
+| 6 | 14 Oct | Cite and file a paper | Donders or a scale primer | — |
+| 7 | 21 Oct | Methods section | Procedure already run | — |
+| 8 | 28 Oct | Results webpage | One claim + figure | critique 1 |
+| 9 | 4 Nov | What a small n can support | Rewrite an earlier claim | last report |
+| 10 | 18 Nov | Proposal and consent | Pair project | — |
+| 11 | 25 Nov | Project laboratory | — | — |
+| 12 | 2 Dec | Presentations | The page is the talk | last meeting |
 
 No class 30 September or 11 November.
 
-## Class meeting
+`search.html` and `sdt.html` remain in the repository as optional extras. They are not syllabus weeks.
 
-18:00 introduction · 18:25 demonstration · 18:40 exercise · 19:15 break · 19:25 results · 20:05 modification · 20:45 discussion.
+## Assessment
 
-Reports (weeks 1–9) are due Tuesday 17:00. Assessment: 40% reports, 20% two critiques, 40% pair project.
+40% weekly reports (weeks 1–9, drop lowest) · 20% two critiques · 40% pair project (a small study or a methods-and-results page).
 
 ## Instructor pipeline
 
-Canvas helpers live in `pipeline/` (token shared with Psych 275). Course id **35483**. Week 0 assignment **812211**.
+`pipeline/` (token shared with Psych 275). Course **35483**. Week 0 assignment **812211**.

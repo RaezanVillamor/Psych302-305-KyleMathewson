@@ -1,17 +1,17 @@
-# Lab note · Week NN
+# Laboratory report · Week NN
 
 **Name:**
-**Date of studio:**
-**Computation:**
+**Date of class:**
+**Tool / example:**
 
 ## Phenomenon
 What did we measure?
 
 ## Prediction
-What did you write down before the first click?
+What did you write down before the first trial?
 
 ## Number
-The slope, d′, threshold, lag point, α, or curve. One number or one small table. Paste nothing that identifies a classmate.
+A mean, a standard deviation, *n*, or a short table. Paste nothing that identifies a classmate.
 
 ## Limitation
 One reason this number can lie.

@@ -51,11 +51,11 @@ WEEKLIES = [
         "due": "2026-09-29T17:00:00-06:00",
         "due_display": "29 September 2026",
         "meet": "23 September",
-        "lab": f"{BOOK}/stats.html",
-        "lab_label": "Week 4 descriptives",
+        "lab": f"{BOOK}/report.html",
+        "lab_label": "Week 4 research reports",
         "note_path": "lab-notes/week04.md",
-        "ask": "n, mean, SD, and what you excluded. Due 29 September (no class 30 September).",
-        "module": "Week 4 · Descriptives (23 Sep)",
+        "ask": "Paths to REPORT.md, summarize.py, the generated snippet, and main.tex. Name one change after the first build. Due 29 September (no class 30 September).",
+        "module": "Week 4 · Research reports (23 Sep)",
     },
     {
         "n": 5,
@@ -123,6 +123,7 @@ WEEKLIES = [
 # Unpublish leftovers only after the replacement exists (see run()).
 LEFTOVER_UNPUBLISH = {
     "Week 1 · Codespace (2 Sep)",
+    "Week 4 · Descriptives (23 Sep)",
     "Week 9 · Small n (4 Nov)",
 }
 

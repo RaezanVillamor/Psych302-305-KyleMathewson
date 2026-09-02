@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Week 4 · Research reports · PSYCH 302 / 305</title>
+    <link rel="stylesheet" href="studio.css" />
+    <style>
+      textarea,
+      input[type="number"],
+      input[type="text"] {
+        width: 100%;
+        background: rgba(2, 6, 23, 0.8);
+        border: 1px solid var(--panel-border);
+        color: var(--ink);
+        border-radius: 10px;
+        padding: 10px;
+        font-family: "Segoe UI", sans-serif;
+        font-size: 0.88rem;
+      }
+      textarea {
+        min-height: 88px;
+        resize: vertical;
+        font-family: "Courier New", monospace;
+        line-height: 1.45;
+      }
+      textarea.prose {
+        font-family: "Iowan Old Style", Palatino, Georgia, serif;
+      }
+      .controls {
+        display: grid;
+        gap: 10px;
+        margin: 12px 0;
+        font-family: "Segoe UI", sans-serif;
+        font-size: 0.88rem;
+        color: var(--muted);
+      }
+      pre.snippet {
+        margin: 0;
+        padding: 12px;
+        border-radius: 12px;
+        background: rgba(2, 6, 23, 0.65);
+        border: 1px solid var(--panel-border);
+        white-space: pre-wrap;
+        font-size: 0.82rem;
+        color: var(--ink);
+      }
+      .paper-sheet {
+        background: var(--paper);
+        color: var(--paper-ink);
+        border-radius: 8px;
+        padding: 28px 32px 36px;
+        min-height: 420px;
+        box-shadow: inset 0 0 0 1px rgba(28, 25, 21, 0.08);
+      }
+      .paper-sheet h2 {
+        font-size: 1.15rem;
+        margin: 18px 0 8px;
+        color: #1c1915;
+      }
+      .paper-sheet h1 {
+        font-size: 1.7rem;
+        margin: 0 0 6px;
+        color: #1c1915;
+      }
+      .paper-sheet p {
+        color: #3f3a32;
+        line-height: 1.6;
+        margin: 0 0 10px;
+      }
+      .paper-meta {
+        font-family: "Segoe UI", sans-serif;
+        font-size: 0.78rem;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        color: #6b6458;
+        margin-bottom: 16px;
+      }
+      .loop-log {
+        font-family: "Segoe UI", sans-serif;
+        font-size: 0.82rem;
+        color: var(--muted);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <nav class="topnav">
+        <a class="brand" href="index.html">
+          <small>Week 4 · PSYCH 302 / 305</small>
+          <strong>Research reports</strong>
+        </a>
+        <div class="nav-links">
+          <a href="index.html">Overview</a>
+          <a href="schedule.html">Schedule</a>
+          <a href="workflow.html">Computing</a>
+          <a href="playground.html">Week 1</a>
+          <a href="labs.html">Labs</a>
+        </div>
+      </nav>
+
+      <header class="panel" style="margin-bottom: 18px">
+        <div class="kicker">Week 4 laboratory</div>
+        <h1>Write the paper from files, then rebuild</h1>
+        <p class="lede">
+          A research report is not a number you type once. It is three files
+          that stay in sync: Markdown you write, a Python script that computes,
+          and a LaTeX document that typesets. Tonight you run that loop on
+          your Week 2 or Week 3 CSV.
+        </p>
+        <div class="equation">
+          edit → run the script → read the output → edit again
+          <small>Do not type a mean by hand. If the number is wrong, fix the script or the file.</small>
+        </div>
+      </header>
+
+      <section class="grid-3" style="margin-bottom: 16px">
+        <article class="card">
+          <div class="chip gold">Markdown</div>
+          <h3>What you claim</h3>
+          <p>
+            <a href="report/REPORT.md">report/REPORT.md</a>
+            is the readable paper. Prediction and limitation are yours.
+            The results block is generated.
+          </p>
+        </article>
+        <article class="card">
+          <div class="chip">Python</div>
+          <h3>What you compute</h3>
+          <p>
+            <a href="report/scripts/summarize.py">report/scripts/summarize.py</a>
+            reads the CSV and writes
+            <code>output/numbers.md</code> and
+            <code>output/numbers.tex</code>. Standard library only.
+          </p>
+        </article>
+        <article class="card">
+          <div class="chip">LaTeX</div>
+          <h3>What you typeset</h3>
+          <p>
+            <a href="report/main.tex">report/main.tex</a>
+            <code>\input</code>s the generated snippet. A PDF is a bonus if
+            <code>pdflatex</code> is present; the <code>.tex</code> is enough.
+          </p>
+        </article>
+      </section>
+
+      <section class="panel" style="margin-bottom: 16px">
+        <div class="kicker">In the private repository</div>
+        <h2>Copy the starter, then run the loop</h2>
+        <p class="muted">
+          If your studio repo does not yet have a <code>report/</code> folder,
+          copy it from this handbook
+          (<a href="report/README.md">report/README.md</a>).
+          Put your CSV in <code>data/</code>. In a Codespace:
+        </p>
+        <pre class="snippet">cd report
+python3 -m venv .venv
+source .venv/bin/activate
+bash build.sh ../data/YOURFILE.csv</pre>
+        <p class="muted" style="margin-top: 12px">
+          Read the generated block in <code>REPORT.md</code>. Change one
+          sentence, or one line of the script (exclusion bounds, or a second
+          statistic). Run <code>build.sh</code> again. The optional
+          <a href="stats.html">descriptives page</a> is still here if you want
+          a histogram; it is not this week’s report.
+        </p>
+      </section>
+
+      <div class="grid-2" style="margin-bottom: 16px">
+        <section class="panel">
+          <div class="kicker">Practice loop · on this page</div>
+          <h2>Run, read, change, run</h2>
+          <div class="controls">
+            <label>CSV file <input type="file" id="fileEl" accept=".csv,text/csv" /></label>
+            <label>Exclude below <input type="number" id="minEl" value="150" /></label>
+            <label>Exclude above <input type="number" id="maxEl" value="2500" /></label>
+            <label>Report title <input type="text" id="titleEl" value="Simple reaction time, one sitting" /></label>
+            <label>Prediction (write this first)
+              <textarea class="prose" id="predEl">Mean usable RT will be under 350 ms.</textarea>
+            </label>
+            <label>Limitation
+              <textarea class="prose" id="limitEl">This is one person and one evening. A classroom mean is not a finding about people in general.</textarea>
+            </label>
+          </div>
+          <div class="actions">
+            <button type="button" id="rtBtn" class="secondary">Load sample RT</button>
+            <button type="button" id="invBtn" class="secondary">Load sample inventory</button>
+            <button type="button" id="buildBtn" class="primary">Rebuild report</button>
+          </div>
+          <p class="loop-log" id="statusEl" style="margin-top: 12px">Load a file, write a prediction, then rebuild.</p>
+          <h3 style="margin-top: 18px">Generated Markdown</h3>
+          <pre class="snippet" id="mdEl">Run the script to fill this block.</pre>
+          <h3 style="margin-top: 14px">Generated LaTeX</h3>
+          <pre class="snippet" id="texEl">\input{output/numbers}</pre>
+        </section>
+        <aside class="panel">
+          <div class="kicker">Compiled page</div>
+          <h2>What a reader sees</h2>
+          <div class="paper-sheet" id="paperEl">
+            <p class="paper-meta">Rebuild to typeset</p>
+            <h1>Untitled report</h1>
+            <p>Load a CSV and press Rebuild report.</p>
+          </div>
+        </aside>
+      </div>
+
+      <section class="grid-2" style="margin-bottom: 16px">
+        <article class="panel">
+          <div class="kicker">Remix</div>
+          <h2>Arts and Science</h2>
+          <p class="muted">
+            <strong>Arts:</strong> the prose. After the first build, rewrite
+            the title, prediction, and limitation until a stranger can state
+            the claim in one sentence. Do not invent a prettier mean.
+          </p>
+          <p class="muted">
+            <strong>Science:</strong> the script. Change the exclusion rule or
+            add a second descriptive (median, or first half versus second half).
+            Rebuild so <code>output/</code> updates. Paste the old and new
+            generated sentences in the report.
+          </p>
+        </article>
+        <article class="panel">
+          <div class="kicker">Weekly report</div>
+          <h2>What to submit</h2>
+          <p class="muted">
+            Paths to <code>report/REPORT.md</code> (or
+            <code>lab-notes/week04.md</code>),
+            <code>report/scripts/summarize.py</code>,
+            <code>report/output/numbers.md</code> or
+            <code>numbers.tex</code>, and <code>report/main.tex</code>.
+            Name one change you made after the first build. Due Tuesday
+            29 September (no class on the 30th).
+          </p>
+        </article>
+      </section>
+
+      <section class="panel">
+        <div class="kicker">Class night</div>
+        <h2>Agenda</h2>
+        <div class="agenda">
+          <dl>
+            <dt>18:00 Introduction</dt>
+            <dd>A report is a pipeline. The number in the paper must come from a file the script can read again.</dd>
+            <dt>18:25 Demonstration</dt>
+            <dd>Instructor runs <code>build.sh</code> on a sample CSV, reads the PDF or Markdown, changes one line, runs it again.</dd>
+            <dt>18:40 Exercise</dt>
+            <dd>Copy the starter if needed. Point the script at your own CSV. Write the prediction first.</dd>
+          </dl>
+          <dl>
+            <dt>19:25 Results</dt>
+            <dd>Show the generated block and one limitation. No draft exchange.</dd>
+            <dt>20:05 Modification</dt>
+            <dd><strong>Arts:</strong> the sentences. <strong>Science:</strong> the script, then rebuild.</dd>
+            <dt>Reading</dt>
+            <dd><a href="report/README.md">report/README.md</a> and the note on <a href="workflow.html#agentic">agentic coding</a>.</dd>
+          </dl>
+        </div>
+        <p class="muted">
+          <strong>Report:</strong> the four paths, and one iteration you can
+          describe. The mean you typed by hand does not count.
+        </p>
+      </section>
+    </div>
+    <script>
+      const statusEl = document.getElementById("statusEl");
+      const mdEl = document.getElementById("mdEl");
+      const texEl = document.getElementById("texEl");
+      const paperEl = document.getElementById("paperEl");
+      let rows = [];
+      let headers = [];
+      let fileName = "table.csv";
+      let builds = 0;
+      let lastMd = "";
+
+      function mean(xs) {
+        return xs.reduce((a, b) => a + b, 0) / xs.length;
+      }
+      function sd(xs) {
+        if (xs.length < 2) return null;
+        const m = mean(xs);
+        return Math.sqrt(xs.reduce((a, x) => a + (x - m) ** 2, 0) / (xs.length - 1));
+      }
+
+      function parseCsv(text, name) {
+        const lines = text.trim().split(/\r?\n/).filter((line) => line && !line.startsWith("#"));
+        headers = lines[0].split(",").map((h) => h.trim());
+        rows = lines.slice(1).map((line) => {
+          const cells = line.split(",");
+          const obj = {};
+          headers.forEach((h, i) => {
+            obj[h] = cells[i] === undefined ? "" : cells[i].trim();
+          });
+          return obj;
+        });
+        fileName = name || "table.csv";
+        statusEl.textContent = `${rows.length} rows from ${fileName}. Write a prediction, then rebuild.`;
+      }
+
+      function detectColumn() {
+        const names = headers.map((h) => h.toLowerCase());
+        if (names.includes("rt")) return headers[names.indexOf("rt")];
+        if (names.includes("scored")) return headers[names.indexOf("scored")];
+        return headers.find((h) => rows.some((r) => r[h] !== "" && !Number.isNaN(Number(r[h])))) || "";
+      }
+
+      function usable() {
+        const col = detectColumn();
+        const lo = Number(document.getElementById("minEl").value);
+        const hi = Number(document.getElementById("maxEl").value);
+        const xs = rows
+          .map((r) => Number(r[col]))
+          .filter((x) => Number.isFinite(x) && x >= lo && x <= hi);
+        return { col, lo, hi, xs };
+      }
+
+      function formatMean(value, col) {
+        if (col === "rt") return `${Math.round(value)} ms`;
+        return value.toFixed(2);
+      }
+
+      function escapeHtml(text) {
+        return text
+          .replace(/&/g, "&amp;")
+          .replace(/</g, "&lt;")
+          .replace(/>/g, "&gt;");
+      }
+
+      function rebuild() {
+        if (!rows.length) {
+          statusEl.textContent = "Load a CSV or a sample first.";
+          return;
+        }
+        const { col, lo, hi, xs } = usable();
+        if (!xs.length) {
+          statusEl.textContent = "No usable values in that range.";
+          mdEl.textContent = "No usable values.";
+          texEl.textContent = "No usable values.";
+          return;
+        }
+        const m = mean(xs);
+        const s = sd(xs);
+        const excluded = rows.length - xs.length;
+        const kind = col === "rt" ? "reaction time" : col === "scored" ? "inventory item scores" : `column ${col}`;
+        const rangeText =
+          col === "rt"
+            ? `times under ${lo} ms or over ${hi} ms were excluded`
+            : `values outside ${lo}–${hi} were excluded`;
+        const md =
+          `File \`${fileName}\`: ${xs.length} usable values of ${kind} ` +
+          `(column \`${col}\`). Mean = ${formatMean(m, col)}` +
+          (s === null ? "" : `, SD = ${formatMean(s, col)}`) +
+          `. ${excluded} row(s) excluded; ${rangeText}.`;
+        const unit = col === "rt" ? "~ms" : "";
+        const texMean = col === "rt" ? String(Math.round(m)) : m.toFixed(2);
+        const texSd = s === null ? "---" : col === "rt" ? String(Math.round(s)) : s.toFixed(2);
+        const tex =
+          `File \\texttt{${fileName}}: $n=${xs.length}$ usable values. ` +
+          `Mean = $${texMean}$${unit}` +
+          (s === null ? "" : `, $SD=${texSd}$${unit}`) +
+          `. ${excluded} row(s) excluded.`;
+        mdEl.textContent = md;
+        texEl.textContent = tex;
+        const title = document.getElementById("titleEl").value.trim() || "Untitled report";
+        const pred = document.getElementById("predEl").value.trim() || "No prediction yet.";
+        const limit = document.getElementById("limitEl").value.trim() || "State a limitation.";
+        const changed = builds > 0 && md !== lastMd;
+        builds += 1;
+        lastMd = md;
+        paperEl.innerHTML = `
+          <p class="paper-meta">Build ${builds} · generated results · do not type the mean</p>
+          <h1>${escapeHtml(title)}</h1>
+          <h2>Prediction</h2>
+          <p>${escapeHtml(pred)}</p>
+          <h2>Results</h2>
+          <p>${escapeHtml(md)}</p>
+          <h2>Limitation</h2>
+          <p>${escapeHtml(limit)}</p>
+        `;
+        statusEl.textContent = changed
+          ? `Build ${builds}: the generated numbers changed. That is an iteration.`
+          : `Build ${builds}: paper rebuilt. Change the range or the script idea, then rebuild again.`;
+      }
+
+      async function loadUrl(url, name, minV, maxV) {
+        const text = await fetch(url).then((r) => r.text());
+        document.getElementById("minEl").value = String(minV);
+        document.getElementById("maxEl").value = String(maxV);
+        parseCsv(text, name);
+      }
+
+      document.getElementById("fileEl").addEventListener("change", (event) => {
+        const file = event.target.files[0];
+        if (!file) return;
+        file.text().then((text) => parseCsv(text, file.name));
+      });
+      document.getElementById("rtBtn").addEventListener("click", () => {
+        loadUrl("data/sample-rt.csv", "sample-rt.csv", 150, 2500);
+      });
+      document.getElementById("invBtn").addEventListener("click", () => {
+        loadUrl("data/sample-inventory.csv", "sample-inventory.csv", 1, 5);
+      });
+      document.getElementById("buildBtn").addEventListener("click", rebuild);
+    </script>
+  </body>
+</html>

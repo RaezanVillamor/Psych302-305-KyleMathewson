@@ -41,7 +41,7 @@
           <a href="#w1"><b>1 · 2 Sep</b>Playground</a>
           <a href="#w2"><b>2 · 9 Sep</b>Reaction time</a>
           <a href="#w3"><b>3 · 16 Sep</b>Inventory</a>
-          <a href="#w4"><b>4 · 23 Sep</b>Descriptives</a>
+          <a href="#w4"><b>4 · 23 Sep</b>Reports</a>
           <a href="#w5"><b>5 · 7 Oct</b>Comparison</a>
           <a href="#w6"><b>6 · 14 Oct</b>Citation</a>
           <a href="#w7"><b>7 · 21 Oct</b>Methods</a>
@@ -86,7 +86,17 @@
             <dt>18:00 GitHub account</dt>
             <dd>Week 0 form on Canvas. Neighbours help. No credit card.</dd>
             <dt>Then demonstration</dt>
-            <dd>Instructor customizes the page, saves <code>index.html</code>, creates a repo, turns on Pages, forks the whole class repo, replaces that fork’s <code>index.html</code>, then opens a PR. The coolest student PR becomes the new class homepage.</dd>
+            <dd>Open the
+              <a href="index.html#past-projects">past course projects</a>
+              on the homepage
+              (<a href="https://kylemath.github.io/BrainGames/">Brain Games</a>,
+              <a href="https://kylemath.github.io/Brainimation/">Brainimation</a>,
+              <a href="https://kylemath.github.io/p5.eegedu/">p5.eegedu</a>,
+              the
+              <a href="https://kylemath.github.io/NeuroimagingClass/portfolio_test/student_portfolios_index.html">PSYCH 403 portfolios</a>,
+              and
+              <a href="https://kylemathewson.com/">kylemathewson.com</a>),
+              then customize the playground, save <code>index.html</code>, create a repo, turn on Pages, fork the whole class repo, replace that fork’s <code>index.html</code>, and open a PR. The coolest student PR becomes the new class homepage.</dd>
             <dt>Exercise</dt>
             <dd>Three personal changes, then all four GitHub steps.</dd>
           </dl>
@@ -95,6 +105,8 @@
             <dd>Paste own-repo, Pages, fork, and PR URLs on the Week 1 Canvas assignment. List the three changes.</dd>
             <dt>Modification</dt>
             <dd><strong>Arts:</strong> how it feels. <strong>Science:</strong> one change can be a number or a time. Disclose any AI use.</dd>
+            <dt>20:45 Discussion</dt>
+            <dd>Agentic coding: you stay the author; an assistant may propose an edit; you run it, read it, and keep or change it. Do not paste classmate data. Do not buy a plan. Full note on the <a href="workflow.html#agentic">Computing</a> page. Week 4 is the first graded loop.</dd>
             <dt>Preparation</dt>
             <dd>Laptop. A GitHub login, or time in the first hour to make one.</dd>
           </dl>
@@ -127,6 +139,8 @@
             <dd>Report n, mean, and standard deviation. Save the CSV in <code>data/</code>.</dd>
             <dt>20:05 Modification</dt>
             <dd><strong>Arts:</strong> change the appearance of the mark. <strong>Science:</strong> run the two-colour (choice) block and compare the two means.</dd>
+            <dt>20:45 Discussion</dt>
+            <dd>Two minutes on the <a href="workflow.html#agentic">agentic loop</a> from Week 1. Tonight’s number comes from the page export, not a chatbot. Week 4 is when a script writes the number into the paper.</dd>
             <dt>Reading</dt>
             <dd>A short note on Donders (1868) or a one-page instructor primer. Skim.</dd>
           </dl>
@@ -169,32 +183,35 @@
       <article class="panel meeting" id="w4">
         <div class="meeting-head">
           <div class="when">Week 4 · Wednesday 23 September 2026</div>
-          <a href="stats.html">stats.html</a>
+          <a href="report.html">report.html</a>
         </div>
-        <h2>Tool: descriptive statistics on a CSV</h2>
+        <h2>Tool: a report from Markdown, a script, and LaTeX</h2>
         <p class="muted">
-          Example: your Week 2 reaction times or Week 3 inventory scores. Mean,
-          standard deviation, and a simple histogram.
+          Example: your Week 2 reaction times or Week 3 inventory scores.
+          Write the paper in <code>report/REPORT.md</code>, compute with
+          <code>report/scripts/summarize.py</code>, typeset with
+          <code>report/main.tex</code>. Run, read, change, run again.
+          Do not type the mean by hand.
         </p>
         <div class="agenda">
           <dl>
             <dt>18:00 Introduction</dt>
-            <dd>A number without a spread is incomplete.</dd>
+            <dd>A report is a pipeline. The number in the paper must come from a file the script can read again.</dd>
             <dt>18:25 Demonstration</dt>
-            <dd>Load a CSV and compute mean and SD on screen.</dd>
+            <dd>Instructor runs <code>build.sh</code> on a sample CSV, reads the output, changes one line, runs it again.</dd>
             <dt>18:40 Exercise</dt>
-            <dd>Apply the same calculations to your own file.</dd>
+            <dd>Copy the starter if needed. Point the script at your CSV. Write the prediction first.</dd>
           </dl>
           <dl>
             <dt>19:25 Results</dt>
-            <dd>Report mean, SD, and n. Note any values you excluded and why.</dd>
+            <dd>The generated block and one limitation. No draft exchange.</dd>
             <dt>20:05 Modification</dt>
-            <dd><strong>Arts:</strong> the figure. <strong>Science:</strong> a second descriptive (median or first vs second half).</dd>
+            <dd><strong>Arts:</strong> the sentences. <strong>Science:</strong> the script (exclusion or a second descriptive), then rebuild.</dd>
             <dt>Reading</dt>
-            <dd>A one-page descriptives primer on the laboratory page.</dd>
+            <dd><a href="report/README.md">report/README.md</a> and <a href="workflow.html#agentic">agentic coding</a>.</dd>
           </dl>
         </div>
-        <p class="muted"><strong>Report:</strong> due Tuesday 29 September (no class on the 30th).</p>
+        <p class="muted"><strong>Report:</strong> paths to the Markdown, the script, the generated snippet, and the <code>.tex</code>. Name one iteration. Due Tuesday 29 September (no class on the 30th).</p>
       </article>
 
       <article class="panel meeting dark-week">

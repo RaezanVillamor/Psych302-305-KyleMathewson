@@ -2,7 +2,7 @@
 
 University of Alberta, Fall 2026. Cross-listed Science (302) and Arts (305). Wednesday 18:00–21:00.
 
-The course teaches **computing tools** (repository, Codespace, git, data files, written reports) using **ordinary psychology** as the examples (reaction time, inventories, descriptives, documentation). It is not a survey of mathematical psychology.
+The course teaches **computing tools** (repository, Codespace, git, data files, generated reports) using **ordinary psychology** as the examples (reaction time, inventories, a report pipeline, documentation). It is not a survey of mathematical psychology.
 
 **Canvas** is the official course: https://canvas.ualberta.ca/courses/35483
 
@@ -16,7 +16,7 @@ Week 0 (GitHub username): https://canvas.ualberta.ca/courses/35483/assignments/8
 | 1 | 2 Sep (then) | Own repo, Pages, fork, PR | Make a page about you in three ways | [playground.html](playground.html) |
 | 2 | 9 Sep | Timed response, CSV | Simple / choice RT | [rt.html](rt.html) |
 | 3 | 16 Sep | Form and score | Short inventory | [inventory.html](inventory.html) |
-| 4 | 23 Sep | Descriptives | Mean, SD, histogram | [stats.html](stats.html) |
+| 4 | 23 Sep | Markdown, Python, LaTeX loop | Report from your own CSV | [report.html](report.html) |
 | 5 | 7 Oct | Two-condition comparison | Simple vs choice, or two subscales | [compare.html](compare.html) |
 | 6 | 14 Oct | Cite and file a paper | Donders or a scale primer | [cite.html](cite.html) |
 | 7 | 21 Oct | Methods section | Procedure already run | [methods.html](methods.html) |
@@ -28,7 +28,7 @@ Week 0 (GitHub username): https://canvas.ualberta.ca/courses/35483/assignments/8
 
 No class 30 September or 11 November.
 
-`search.html`, `sdt.html`, and `sample.html` remain in the repository as optional extras. They are not syllabus weeks.
+`search.html`, `sdt.html`, `sample.html`, and `stats.html` remain in the repository as optional extras. They are not syllabus weeks.
 
 ## Assessment
 

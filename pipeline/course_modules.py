@@ -17,7 +17,7 @@ WEEKLIES = [
         "lab": f"{BOOK}/playground.html",
         "lab_label": "Week 1 playground",
         "note_path": "lab-notes/week01.md",
-        "ask": "Which layer you changed (HTML, CSS, or JavaScript), and what changed.",
+        "ask": "The three ways you made the page about yourself.",
         "module": "Week 1 · GitHub and playground (2 Sep)",
         "preamble": "Tonight starts with Week 0 (GitHub username) if you have not finished it. This box is the playground report. You may use the public handbook tonight and push the note by Tuesday once your private repository exists.",
     },

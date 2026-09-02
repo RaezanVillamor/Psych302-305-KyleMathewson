@@ -3,97 +3,24 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Week 1 · How a page computes · PSYCH 302 / 305</title>
+    <title>Week 1 · Make this page about you · PSYCH 302 / 305</title>
     <link rel="stylesheet" href="studio.css" />
     <style>
-      .lesson-grid {
+      .studio {
         display: grid;
-        grid-template-columns: 0.9fr 1.3fr;
+        grid-template-columns: 1fr 1fr;
         gap: 18px;
       }
 
-      .language-tabs,
       .actions-row {
         display: flex;
         gap: 8px;
         flex-wrap: wrap;
-        margin-bottom: 14px;
-      }
-
-      .tab {
-        border: 1px solid var(--panel-border);
-        background: rgba(255, 255, 255, 0.04);
-        color: var(--ink);
-        border-radius: 10px;
-        padding: 8px 14px;
-        cursor: pointer;
-      }
-
-      .tab.active {
-        background: linear-gradient(135deg, var(--gold), #f3d39a);
-        color: #1c1408;
-        font-weight: 700;
-      }
-
-      .concept {
-        display: none;
-      }
-
-      .concept.active {
-        display: block;
-      }
-
-      .code-swatch {
-        display: inline-block;
-        padding: 4px 8px;
-        border-radius: 8px;
-        font-family: "Courier New", monospace;
-        font-size: 0.85rem;
-        margin: 0 6px 8px 0;
-      }
-
-      .html-tag {
-        background: rgba(232, 184, 109, 0.14);
-        color: var(--gold);
-      }
-
-      .css-tag {
-        background: var(--sky-soft);
-        color: var(--sky);
-      }
-
-      .js-tag {
-        background: rgba(110, 231, 183, 0.12);
-        color: var(--mint);
-      }
-
-      .editor-grid {
-        display: grid;
-        grid-template-columns: repeat(3, minmax(0, 1fr));
-        gap: 12px;
-        margin-bottom: 14px;
-      }
-
-      .editor-box {
-        display: flex;
-        flex-direction: column;
-        min-width: 0;
-      }
-
-      .editor-box label {
-        display: flex;
-        justify-content: space-between;
-        margin-bottom: 8px;
-        font-size: 0.78rem;
-        letter-spacing: 0.04em;
-        text-transform: uppercase;
-        color: var(--muted);
-        font-family: "Segoe UI", sans-serif;
       }
 
       textarea {
         width: 100%;
-        min-height: 180px;
+        min-height: 420px;
         background: rgba(2, 6, 23, 0.8);
         border: 1px solid var(--panel-border);
         color: var(--ink);
@@ -101,22 +28,21 @@
         padding: 12px;
         resize: vertical;
         font-family: "Courier New", monospace;
-        font-size: 0.88rem;
+        font-size: 0.86rem;
         line-height: 1.45;
       }
 
       iframe {
         display: block;
         width: 100%;
-        min-height: 300px;
+        min-height: 420px;
         border: 0;
         background: white;
         border-radius: 14px;
       }
 
       @media (max-width: 900px) {
-        .lesson-grid,
-        .editor-grid {
+        .studio {
           grid-template-columns: 1fr;
         }
       }
@@ -127,7 +53,7 @@
       <nav class="topnav">
         <a class="brand" href="index.html">
           <small>Week 1 · PSYCH 302 / 305</small>
-          <strong>HTML, CSS, and JavaScript</strong>
+          <strong>A page about you</strong>
         </a>
         <div class="nav-links">
           <a href="index.html">Overview</a>
@@ -140,173 +66,118 @@
 
       <header class="panel" style="margin-bottom: 18px">
         <div class="kicker">Week 1 laboratory · after the GitHub form</div>
-        <h1>Structure, appearance, and behaviour</h1>
+        <h1>Make this website about yourself in three ways</h1>
         <p class="lede">
           If you do not have a GitHub username yet, finish
           <a href="https://canvas.ualberta.ca/courses/35483/assignments/812211">Week 0</a>
-          first. Then use this page. HTML is structure, CSS is appearance,
-          JavaScript is behaviour. Edit one layer at a time.
+          first. Then edit the page below. One window holds the whole file:
+          HTML (words and structure), CSS (inside <code>&lt;style&gt;</code>),
+          and JavaScript (inside <code>&lt;script&gt;</code>).
         </p>
         <div class="equation">
-          page = HTML + CSS + JavaScript
-          <small>Change one layer, name it in your report, and commit. Disclose any AI use.</small>
+          three changes that could only be yours
+          <small>A name, a look, and something the page does when you click. Disclose any AI use.</small>
         </div>
       </header>
 
-      <div class="lesson-grid">
+      <section class="panel" style="margin-bottom: 18px">
+        <div class="kicker">The assignment</div>
+        <h2>Customize the starter page</h2>
+        <p class="muted">
+          Change it in <strong>three ways</strong> so a stranger can tell it is
+          about you. Examples: your name or a nickname; colours or type that
+          feel like you; a button that reveals a fact, a number, or a time.
+          You do not need new libraries. Screenshot the result.
+        </p>
+      </section>
+
+      <div class="studio">
         <section class="panel">
-          <h2>Three building blocks</h2>
-          <div class="language-tabs">
-            <button class="tab active" data-tab="html">HTML</button>
-            <button class="tab" data-tab="css">CSS</button>
-            <button class="tab" data-tab="js">JavaScript</button>
-          </div>
-
-          <div class="concept active" data-panel="html">
-            <span class="code-swatch html-tag">&lt;h1&gt;</span>
-            <span class="code-swatch html-tag">&lt;button&gt;</span>
-            <p>HTML is the skeleton: headings, marks, buttons, the things a participant can see or click.</p>
-            <ul>
-              <li>In an experiment this is the trial structure.</li>
-              <li>In a composition this is the inventory of forms.</li>
-              <li>If you delete an element, it is gone. That is an independent variable.</li>
-            </ul>
-          </div>
-
-          <div class="concept" data-panel="css">
-            <span class="code-swatch css-tag">color: gold;</span>
-            <span class="code-swatch css-tag">padding: 20px;</span>
-            <p>CSS is appearance: color, spacing, rhythm, figure and ground.</p>
-            <ul>
-              <li>Arts students already speak this language.</li>
-              <li>Science students should treat palette as a factor, not a theme.</li>
-              <li>Next week, color is what makes a target pop out.</li>
-            </ul>
-          </div>
-
-          <div class="concept" data-panel="js">
-            <span class="code-swatch js-tag">click</span>
-            <span class="code-swatch js-tag">addEventListener</span>
-            <p>JavaScript is behavior: it notices an action and changes the world.</p>
-            <ul>
-              <li>This is also how we record a reaction time.</li>
-              <li>A click is a response. A timer is a dependent variable.</li>
-              <li>You do not need to be a programmer to change one line and see the mind of the page change.</li>
-            </ul>
-          </div>
-        </section>
-
-        <section class="panel">
-          <div class="sandbox-head" style="display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; align-items: center">
-            <h2>Live coding sandbox</h2>
-            <div class="actions-row" style="margin: 0">
+          <div style="display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; align-items: center; margin-bottom: 12px">
+            <h2 style="margin: 0">Code</h2>
+            <div class="actions-row">
               <button id="runButton" class="primary">Run page</button>
               <button id="resetButton" class="secondary">Reset</button>
             </div>
           </div>
-
-          <div class="editor-grid">
-            <div class="editor-box">
-              <label for="htmlInput">HTML <span>structure</span></label>
-              <textarea id="htmlInput" spellcheck="false"></textarea>
-            </div>
-            <div class="editor-box">
-              <label for="cssInput">CSS <span>style</span></label>
-              <textarea id="cssInput" spellcheck="false"></textarea>
-            </div>
-            <div class="editor-box">
-              <label for="jsInput">JavaScript <span>behavior</span></label>
-              <textarea id="jsInput" spellcheck="false"></textarea>
-            </div>
-          </div>
-
+          <textarea id="codeInput" spellcheck="false" aria-label="Page source"></textarea>
+        </section>
+        <section class="panel">
+          <h2>Preview</h2>
           <iframe id="preview" title="Preview of the web page"></iframe>
-          <p class="muted" style="font-family: 'Segoe UI', sans-serif; font-size: 0.9rem">
-            Laboratory report: screenshot one change, name the layer in <code>lab-notes/week01.md</code>, push by Tuesday 17:00.
-          </p>
         </section>
       </div>
+
+      <p class="muted" style="margin-top: 16px">
+        Report in <code>lab-notes/week01.md</code>: your three changes, a
+        screenshot, and the disclosure. Due Tuesday 8 September, 17:00.
+      </p>
     </div>
 
     <script>
-      const defaultHTML = `
-<div class="card">
-  <h1>A page can be an experiment</h1>
-  <p>HTML builds the structure. CSS dresses it. JavaScript waits for you.</p>
-  <button id="demoButton">Click when you are ready</button>
-</div>
-`;
+      const defaultPage = `<!DOCTYPE html>
+<html>
+<head>
+  <style>
+    body {
+      font-family: Georgia, serif;
+      display: grid;
+      place-items: center;
+      min-height: 100vh;
+      margin: 0;
+      background: #0b0f14;
+      color: #f6f1e6;
+    }
+    .card {
+      background: #1a2230;
+      padding: 28px 32px;
+      border-radius: 20px;
+      text-align: center;
+      max-width: 420px;
+    }
+    button {
+      background: #e8b86d;
+      color: #1c1408;
+      border: none;
+      padding: 10px 18px;
+      border-radius: 10px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1>Hello, I am a student</h1>
+    <p>Replace this sentence with something true about you.</p>
+    <p id="detail">A second fact can go here.</p>
+    <button id="more">Click for a third fact</button>
+  </div>
+  <script>
+    const button = document.getElementById("more");
+    button.addEventListener("click", () => {
+      document.getElementById("detail").textContent =
+        "I clicked this button in class.";
+      button.textContent = "Thanks";
+    });
+  <\/script>
+</body>
+</html>`;
 
-      const defaultCSS = `
-body {
-  font-family: Georgia, serif;
-  display: grid;
-  place-items: center;
-  min-height: 100vh;
-  margin: 0;
-  background: linear-gradient(135deg, #0b0f14, #1d4ed8);
-  color: #f6f1e6;
-}
-
-.card {
-  background: rgba(255,255,255,0.1);
-  padding: 28px 32px;
-  border-radius: 20px;
-  text-align: center;
-  max-width: 420px;
-}
-
-button {
-  background: #e8b86d;
-  color: #1c1408;
-  border: none;
-  padding: 10px 18px;
-  border-radius: 10px;
-  font-weight: bold;
-  cursor: pointer;
-}
-`;
-
-      const defaultJS = `
-const button = document.getElementById('demoButton');
-const started = performance.now();
-button.addEventListener('click', () => {
-  const rt = Math.round(performance.now() - started);
-  button.textContent = 'You responded in ' + rt + ' ms';
-  button.style.background = '#6ee7b7';
-});
-`;
-
-      const htmlInput = document.getElementById("htmlInput");
-      const cssInput = document.getElementById("cssInput");
-      const jsInput = document.getElementById("jsInput");
+      const codeInput = document.getElementById("codeInput");
       const preview = document.getElementById("preview");
 
-      htmlInput.value = defaultHTML.trim();
-      cssInput.value = defaultCSS.trim();
-      jsInput.value = defaultJS.trim();
-
       function renderPreview() {
-        preview.srcdoc = `<!DOCTYPE html><html><head><style>${cssInput.value}</style></head><body>${htmlInput.value}<script>${jsInput.value}<\/script></body></html>`;
+        preview.srcdoc = codeInput.value;
       }
 
       document.getElementById("runButton").addEventListener("click", renderPreview);
       document.getElementById("resetButton").addEventListener("click", () => {
-        htmlInput.value = defaultHTML.trim();
-        cssInput.value = defaultCSS.trim();
-        jsInput.value = defaultJS.trim();
+        codeInput.value = defaultPage;
         renderPreview();
       });
 
-      document.querySelectorAll(".tab").forEach((tab) => {
-        tab.addEventListener("click", () => {
-          document.querySelectorAll(".tab").forEach((item) => item.classList.toggle("active", item === tab));
-          document.querySelectorAll(".concept").forEach((panel) => {
-            panel.classList.toggle("active", panel.dataset.panel === tab.dataset.tab);
-          });
-        });
-      });
-
+      codeInput.value = defaultPage;
       renderPreview();
     </script>
   </body>

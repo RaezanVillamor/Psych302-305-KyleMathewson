@@ -1,0 +1,5 @@
+pipeline/.env
+pipeline/out/
+pipeline/.venv/
+backgroundMaterial/
+.DS_Store

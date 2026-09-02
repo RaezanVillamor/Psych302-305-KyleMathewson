@@ -1,0 +1,17 @@
+{
+  "name": "PSYCH 302/305 Studio",
+  "image": "mcr.microsoft.com/devcontainers/base:ubuntu",
+  "forwardPorts": [8765],
+  "portsAttributes": {
+    "8765": {
+      "label": "Course site",
+      "onAutoForward": "notify"
+    }
+  },
+  "postStartCommand": "python3 -m http.server 8765 --bind 0.0.0.0",
+  "customizations": {
+    "vscode": {
+      "extensions": ["github.copilot", "github.copilot-chat"]
+    }
+  }
+}

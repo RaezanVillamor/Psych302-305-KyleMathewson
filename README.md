@@ -21,14 +21,14 @@ Week 0 (GitHub username): https://canvas.ualberta.ca/courses/35483/assignments/8
 | 6 | 14 Oct | Cite and file a paper | Donders or a scale primer | [cite.html](cite.html) |
 | 7 | 21 Oct | Methods section | Procedure already run | [methods.html](methods.html) |
 | 8 | 28 Oct | Results webpage | One claim + figure; midterm check-in | [results.html](results.html) |
-| 9 | 4 Nov | What a small n can support | Rewrite an earlier claim | [sample.html](sample.html) |
+| 9 | 4 Nov | Gamified research | A browser game that studies a question | [game.html](game.html) |
 | 10 | 18 Nov | Project workshop | Individual final | [project.html](project.html) |
 | 11 | 25 Nov | Project laboratory | — | [project.html](project.html) |
 | 12 | 2 Dec | Final page due | The page is the submission | [project.html](project.html) |
 
 No class 30 September or 11 November.
 
-`search.html` and `sdt.html` remain in the repository as optional extras. They are not syllabus weeks.
+`search.html`, `sdt.html`, and `sample.html` remain in the repository as optional extras. They are not syllabus weeks.
 
 ## Assessment
 

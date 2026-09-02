@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Week 9 · Gamified research · PSYCH 302 / 305</title>
+    <link rel="stylesheet" href="studio.css" />
+    <style>
+      .lab-grid {
+        display: grid;
+        grid-template-columns: 0.9fr 1.3fr;
+        gap: 18px;
+      }
+      .stage {
+        min-height: 320px;
+        border-radius: 16px;
+        background: #07090d;
+        display: grid;
+        place-items: center;
+        position: relative;
+        outline: none;
+      }
+      .stage:focus {
+        box-shadow: 0 0 0 2px rgba(232, 184, 109, 0.45);
+      }
+      .fix,
+      .mark,
+      .hold-copy {
+        display: none;
+      }
+      .stage.waiting .fix {
+        display: block;
+        color: #b7b1a4;
+        font-size: 2rem;
+      }
+      .stage.go .mark {
+        display: block;
+        width: 84px;
+        height: 84px;
+        border-radius: 50%;
+        background: #e8b86d;
+        box-shadow: 0 0 0 10px rgba(232, 184, 109, 0.16);
+      }
+      .stage.nogo .mark {
+        display: block;
+        width: 84px;
+        height: 84px;
+        border-radius: 12px;
+        background: #6ee7b7;
+        box-shadow: 0 0 0 10px rgba(110, 231, 183, 0.16);
+      }
+      .stage.nogo .hold-copy {
+        display: block;
+        position: absolute;
+        bottom: 28px;
+        color: #6ee7b7;
+        font-family: "Segoe UI", sans-serif;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+        font-size: 0.72rem;
+      }
+      .hud {
+        display: flex;
+        justify-content: space-between;
+        gap: 12px;
+        margin-bottom: 12px;
+        font-family: "Segoe UI", sans-serif;
+        color: var(--muted);
+        font-size: 0.9rem;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        font-family: "Segoe UI", sans-serif;
+        font-size: 0.88rem;
+      }
+      th, td {
+        text-align: left;
+        padding: 6px 0;
+        border-bottom: 1px solid var(--panel-border);
+      }
+      @media (max-width: 900px) {
+        .lab-grid { grid-template-columns: 1fr; }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <nav class="topnav">
+        <a class="brand" href="index.html">
+          <small>Week 9 · PSYCH 302 / 305</small>
+          <strong>Gamified research</strong>
+        </a>
+        <div class="nav-links">
+          <a href="index.html">Overview</a>
+          <a href="schedule.html">Schedule</a>
+          <a href="workflow.html">Computing</a>
+          <a href="playground.html">Week 1</a>
+          <a href="labs.html">Labs</a>
+        </div>
+      </nav>
+
+      <header class="panel" style="margin-bottom: 18px">
+        <div class="kicker">Week 9 laboratory · last weekly report</div>
+        <h1>A game that studies a question</h1>
+        <p class="lede">
+          Question: are people worse at withholding a frequent response than at
+          executing it? Amber circle = press space. Mint square = do nothing.
+          Write a predicted false-alarm rate before you start. Export the CSV
+          into <code>data/</code>.
+        </p>
+      </header>
+
+      <div class="lab-grid">
+        <aside class="panel">
+          <div class="kicker">This block</div>
+          <h2>Usable trials only</h2>
+          <p class="muted">
+            Go times under 150 ms are anticipations. Times over 1000 ms, or a
+            missed go, are lapses. Every trial is stored. Means use correct go
+            responses in 150–1000 ms. No-go accuracy is the share of holds you
+            actually withheld.
+          </p>
+          <div class="equation">
+            go mean RT
+            <small>Milliseconds, correct go trials in 150–1000 ms.</small>
+          </div>
+          <div class="stat" id="meanEl">—</div>
+          <p class="muted" id="summaryEl">n = 0 · no-go accuracy = —</p>
+          <table>
+            <thead>
+              <tr><th>Condition</th><th>n</th><th>Result</th></tr>
+            </thead>
+            <tbody id="meansBody">
+              <tr><td colspan="3">No trials yet.</td></tr>
+            </tbody>
+          </table>
+        </aside>
+
+        <section class="panel">
+          <div class="hud">
+            <span id="status">Click the display, then start a block.</span>
+            <span id="progress">0 / 0</span>
+          </div>
+          <div id="stage" class="stage" tabindex="0" role="application" aria-label="Go / no-go display">
+            <div class="fix" aria-hidden="true">+</div>
+            <div class="mark" aria-hidden="true"></div>
+            <div class="hold-copy" aria-hidden="true">hold</div>
+          </div>
+          <div class="actions" style="margin-top: 14px">
+            <button id="practiceBtn" class="secondary">8-trial practice</button>
+            <button id="scoredBtn" class="primary">Scored block (30 trials)</button>
+            <button id="exportBtn" class="secondary">Export CSV</button>
+          </div>
+          <p class="muted" style="margin-top: 12px">
+            About one trial in five is a hold. Practice means are not findings.
+          </p>
+        </section>
+      </div>
+
+      <section class="grid-2" style="margin-top: 16px">
+        <article class="panel">
+          <div class="kicker">The instrument</div>
+          <h2>Question first, then the game</h2>
+          <p class="muted">
+            Tonight’s n is still small. That is not the week’s lesson. The tool
+            is a browser game that can study a question: it presents two
+            conditions, records a response and a time, and writes a CSV you can
+            reopen in Week 4 or in the final project.
+          </p>
+          <p class="muted">
+            A game without a logged comparison is a toy. This page withholds on
+            a mint square so you can count false alarms against go misses.
+          </p>
+        </article>
+        <article class="panel">
+          <div class="kicker">Remix</div>
+          <h2>Arts and Science</h2>
+          <p class="muted">
+            <strong>Arts:</strong> change the feel. This build uses a proceed /
+            hold signal (amber circle vs mint square) instead of Week 2’s gold
+            and blue squares. Recolour the mark, rename the conditions, or
+            rewrite the hold copy. Do not add a library.
+          </p>
+          <p class="muted">
+            <strong>Science:</strong> log one extra variable. This build stores
+            <code>soa_ms</code> — the wait from fixation to stimulus. You could
+            instead flag catch trials or collect a confidence key after each
+            trial.
+          </p>
+        </article>
+      </section>
+
+      <section class="panel" style="margin-top: 16px">
+        <div class="kicker">Class night</div>
+        <h2>Agenda</h2>
+        <div class="agenda">
+          <dl>
+            <dt>18:00 Introduction</dt>
+            <dd>A game is an instrument if it records a comparison you stated first.</dd>
+            <dt>18:25 Demonstration</dt>
+            <dd>Play eight practice trials. Write a predicted false-alarm rate.</dd>
+            <dt>18:40 Exercise</dt>
+            <dd>Run the scored block. Export the CSV into <code>data/</code>.</dd>
+          </dl>
+          <dl>
+            <dt>19:25 Results</dt>
+            <dd>One sentence: go mean, no-go accuracy, n, and what you will not claim.</dd>
+            <dt>20:05 Modification</dt>
+            <dd><strong>Arts:</strong> feel and theme of the mark. <strong>Science:</strong> one extra logged column.</dd>
+            <dt>Reading</dt>
+            <dd>This page. Optional extra on n: <a href="sample.html">sample.html</a>.</dd>
+          </dl>
+        </div>
+        <p class="muted"><strong>Report:</strong> path to the exported CSV, the question you studied, and one limit. Last weekly report. Due Tuesday 10 November.</p>
+      </section>
+    </div>
+
+    <script>
+      const RT_MIN = 150;
+      const RT_MAX = 1000;
+      const WINDOW = 1000;
+      const stage = document.getElementById("stage");
+      const statusEl = document.getElementById("status");
+      const progressEl = document.getElementById("progress");
+      const meanEl = document.getElementById("meanEl");
+      const summaryEl = document.getElementById("summaryEl");
+      const meansBody = document.getElementById("meansBody");
+
+      let results = [];
+      let queue = [];
+      let index = 0;
+      let onset = 0;
+      let awaiting = false;
+      let responded = false;
+      let timer = 0;
+      let windowTimer = 0;
+      let running = false;
+      let currentSoa = 0;
+
+      function rand(min, max) {
+        return min + Math.random() * (max - min);
+      }
+
+      function mean(xs) {
+        return xs.reduce((a, b) => a + b, 0) / xs.length;
+      }
+
+      function sd(xs) {
+        if (xs.length < 2) return null;
+        const m = mean(xs);
+        return Math.sqrt(xs.reduce((a, x) => a + (x - m) ** 2, 0) / (xs.length - 1));
+      }
+
+      function shuffle(items) {
+        const copy = items.slice();
+        for (let i = copy.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [copy[i], copy[j]] = [copy[j], copy[i]];
+        }
+        return copy;
+      }
+
+      function buildQueue(n, practice) {
+        const nogoN = Math.max(2, Math.round(n * 0.2));
+        const goN = n - nogoN;
+        const items = [
+          ...Array.from({ length: goN }, () => ({ condition: "go", stimulus: "amber_circle" })),
+          ...Array.from({ length: nogoN }, () => ({ condition: "nogo", stimulus: "mint_square" })),
+        ];
+        return shuffle(items).map((item, i) => ({
+          ...item,
+          trial: i + 1,
+          practice: practice ? 1 : 0,
+        }));
+      }
+
+      function clearStage() {
+        stage.classList.remove("waiting", "go", "nogo");
+      }
+
+      function showFixation() {
+        clearStage();
+        stage.classList.add("waiting");
+      }
+
+      function showStimulus(condition) {
+        clearStage();
+        stage.classList.add(condition);
+      }
+
+      function usable(row) {
+        if (row.practice) return false;
+        if (row.condition === "go") {
+          return row.correct === 1 && row.rt_ms >= RT_MIN && row.rt_ms <= RT_MAX;
+        }
+        return row.correct === 1;
+      }
+
+      function record(row) {
+        results.push(row);
+        renderStats();
+      }
+
+      function isoNow() {
+        return new Date().toISOString();
+      }
+
+      function finishBlock() {
+        running = false;
+        awaiting = false;
+        clearStage();
+        window.clearTimeout(timer);
+        window.clearTimeout(windowTimer);
+        statusEl.textContent = "Block finished. Export the CSV.";
+        progressEl.textContent = `${queue.length} / ${queue.length}`;
+      }
+
+      function nextTrial() {
+        index += 1;
+        if (index >= queue.length) {
+          finishBlock();
+          return;
+        }
+        startTrial();
+      }
+
+      function closeTrial(response, note) {
+        if (!running || responded) return;
+        responded = true;
+        awaiting = false;
+        window.clearTimeout(timer);
+        window.clearTimeout(windowTimer);
+        const trial = queue[index];
+        const rt = response === "none" ? "" : Math.round(performance.now() - onset);
+        let correct = 0;
+        if (trial.condition === "go") {
+          correct = response === "space" ? 1 : 0;
+        } else {
+          correct = response === "none" ? 1 : 0;
+        }
+        const rtNum = rt === "" ? "" : rt;
+        const usableFlag = trial.practice
+          ? 0
+          : (trial.condition === "go"
+            ? (correct && rt !== "" && rt >= RT_MIN && rt <= RT_MAX ? 1 : 0)
+            : (correct ? 1 : 0));
+        record({
+          trial: trial.trial,
+          condition: trial.condition,
+          stimulus: trial.stimulus,
+          response,
+          rt_ms: rtNum,
+          correct,
+          usable: usableFlag,
+          timestamp: isoNow(),
+          soa_ms: Math.round(currentSoa),
+          practice: trial.practice,
+        });
+        clearStage();
+        statusEl.textContent = note;
+        window.setTimeout(nextTrial, 550);
+      }
+
+      function startTrial() {
+        const trial = queue[index];
+        responded = false;
+        awaiting = false;
+        progressEl.textContent = `${index + 1} / ${queue.length}`;
+        statusEl.textContent = trial.condition === "go"
+          ? "Amber circle: press space."
+          : "Mint square: withhold.";
+        showFixation();
+        currentSoa = rand(400, 900);
+        timer = window.setTimeout(() => {
+          showStimulus(trial.condition);
+          onset = performance.now();
+          awaiting = true;
+          windowTimer = window.setTimeout(() => {
+            if (!awaiting || responded) return;
+            if (trial.condition === "go") {
+              closeTrial("none", "Missed go. Stored as a lapse.");
+            } else {
+              closeTrial("none", "Hold. Correct withhold.");
+            }
+          }, WINDOW);
+        }, currentSoa);
+      }
+
+      function startBlock(n, practice) {
+        window.clearTimeout(timer);
+        window.clearTimeout(windowTimer);
+        if (!practice) {
+          results = results.filter((row) => row.practice === 1);
+        }
+        queue = buildQueue(n, practice);
+        index = 0;
+        running = true;
+        stage.focus();
+        startTrial();
+      }
+
+      function handleSpace() {
+        if (!running) return;
+        const trial = queue[index];
+        if (!trial || responded) return;
+        if (!awaiting) {
+          window.clearTimeout(timer);
+          window.clearTimeout(windowTimer);
+          responded = true;
+          record({
+            trial: trial.trial,
+            condition: trial.condition,
+            stimulus: trial.stimulus,
+            response: "space",
+            rt_ms: 0,
+            correct: 0,
+            usable: 0,
+            timestamp: isoNow(),
+            soa_ms: Math.round(currentSoa),
+            practice: trial.practice,
+          });
+          clearStage();
+          statusEl.textContent = "Too early. That trial is an anticipation.";
+          window.setTimeout(nextTrial, 550);
+          return;
+        }
+        if (trial.condition === "go") {
+          const rt = Math.round(performance.now() - onset);
+          let note = rt + " ms";
+          if (rt < RT_MIN) note = "Very fast. Stored, excluded from the mean.";
+          if (rt > RT_MAX) note = "Very slow. Stored, excluded from the mean.";
+          closeTrial("space", note);
+        } else {
+          closeTrial("space", "False alarm. You pressed on a hold.");
+        }
+      }
+
+      function renderStats() {
+        const scored = results.filter((row) => !row.practice);
+        const goGood = scored.filter((row) => row.condition === "go" && usable(row));
+        const nogo = scored.filter((row) => row.condition === "nogo");
+        const nogoCorrect = nogo.filter((row) => row.correct === 1);
+        if (!goGood.length) {
+          meanEl.textContent = "—";
+        } else {
+          meanEl.textContent = Math.round(mean(goGood.map((row) => Number(row.rt_ms)))) + " ms";
+        }
+        const s = goGood.length ? sd(goGood.map((row) => Number(row.rt_ms))) : null;
+        const acc = nogo.length ? Math.round((nogoCorrect.length / nogo.length) * 100) + "%" : "—";
+        summaryEl.textContent = `n = ${goGood.length} · SD = ${s === null ? "—" : Math.round(s) + " ms"} · no-go accuracy = ${acc}`;
+        const goAll = scored.filter((row) => row.condition === "go");
+        const goHits = goAll.filter((row) => row.correct === 1).length;
+        const rows = [];
+        if (goAll.length) {
+          rows.push({
+            condition: "go",
+            n: goGood.length,
+            result: goGood.length ? Math.round(mean(goGood.map((row) => Number(row.rt_ms)))) + " ms" : "—",
+          });
+          rows.push({
+            condition: "go hits",
+            n: goAll.length,
+            result: Math.round((goHits / goAll.length) * 100) + "%",
+          });
+        }
+        if (nogo.length) {
+          rows.push({
+            condition: "no-go",
+            n: nogo.length,
+            result: Math.round((nogoCorrect.length / nogo.length) * 100) + "% withheld",
+          });
+        }
+        meansBody.innerHTML = rows.length
+          ? rows.map((row) => `<tr><td>${row.condition}</td><td>${row.n}</td><td>${row.result}</td></tr>`).join("")
+          : "<tr><td colspan='3'>No scored trials yet. Practice is excluded from the table.</td></tr>";
+      }
+
+      function exportCsv() {
+        if (!results.length) {
+          statusEl.textContent = "No trials to export.";
+          return;
+        }
+        const header = "trial,condition,stimulus,response,rt_ms,correct,usable,timestamp,soa_ms,practice";
+        const lines = results.map((row) =>
+          [row.trial, row.condition, row.stimulus, row.response, row.rt_ms, row.correct, row.usable, row.timestamp, row.soa_ms, row.practice].join(",")
+        );
+        const blob = new Blob([header + "\n" + lines.join("\n") + "\n"], { type: "text/csv" });
+        const a = document.createElement("a");
+        a.href = URL.createObjectURL(blob);
+        a.download = "game-week09.csv";
+        a.click();
+        URL.revokeObjectURL(a.href);
+      }
+
+      document.getElementById("practiceBtn").addEventListener("click", () => startBlock(8, true));
+      document.getElementById("scoredBtn").addEventListener("click", () => startBlock(30, false));
+      document.getElementById("exportBtn").addEventListener("click", exportCsv);
+
+      stage.addEventListener("click", () => {
+        stage.focus();
+      });
+
+      window.addEventListener("keydown", (event) => {
+        if (!running) return;
+        if (event.code === "Space") {
+          event.preventDefault();
+          handleSpace();
+        }
+      });
+
+      renderStats();
+    </script>
+  </body>
+</html>

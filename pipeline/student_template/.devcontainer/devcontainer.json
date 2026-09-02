@@ -1,0 +1,16 @@
+{
+  "name": "PSYCH 302/305 studio",
+  "image": "mcr.microsoft.com/devcontainers/base:ubuntu",
+  "forwardPorts": [8765],
+  "portsAttributes": {
+    "8765": {
+      "label": "Local preview",
+      "onAutoForward": "notify"
+    }
+  },
+  "customizations": {
+    "vscode": {
+      "extensions": ["github.copilot", "github.copilot-chat"]
+    }
+  }
+}

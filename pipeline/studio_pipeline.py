@@ -7,14 +7,21 @@ import argparse
 import json
 import os
 import re
+import shutil
+import subprocess
 import sys
+import tempfile
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent
 TEMPLATES = ROOT / "templates"
+STUDENT_TEMPLATE = ROOT / "student_template"
 OUT = ROOT / "out"
 IDS_PATH = OUT / "ids.json"
 PSYCH275_PIPELINE = Path("/Users/kylemathewson/Teaching/Psych275_Instructor/pipeline")
+GITHUB_OWNER = "kylemath"
+GITHUB_USER_RE = re.compile(r"^[A-Za-z0-9](?:[A-Za-z0-9]|-(?=[A-Za-z0-9])){0,38}$")
+FORBIDDEN_TEMPLATE_NAMES = {".env", "pipeline"}
 
 FORM_KEYS = (
     "GitHub username",
@@ -176,6 +183,236 @@ def cmd_week0_pull(_: argparse.Namespace) -> None:
     print(f"wrote {dest}  {len(submitted)}/{len(rows)} with a username")
 
 
+def cmd_week0_grade(args: argparse.Namespace) -> None:
+    """POST complete/incomplete only. Username present and non-empty → complete."""
+    roster_path = OUT / "week0_roster.json"
+    if not roster_path.exists():
+        raise SystemExit("No week0_roster.json. Run week0-pull first.")
+    rows = json.loads(roster_path.read_text())
+    ids = json.loads(IDS_PATH.read_text()) if IDS_PATH.exists() else {}
+    aid = os.environ.get("CANVAS_WEEK0_ASSIGNMENT_ID") or ids.get("week0_assignment_id")
+    if not aid:
+        raise SystemExit("No Week 0 assignment id. Run week0-create first.")
+    client = _client()
+    cid = client.require_course()
+    n_complete = 0
+    n_incomplete = 0
+    for row in rows:
+        uid = row.get("canvasUserId")
+        if uid is None:
+            print(f"skip  no canvasUserId  {row.get('canvasName')}")
+            continue
+        username = (row.get("github_username") or "").strip()
+        grade = "complete" if username else "incomplete"
+        if args.dry_run:
+            print(f"dry   {uid}\t{grade}\t{row.get('canvasName')}")
+        else:
+            _notify_request(
+                client,
+                "PUT",
+                f"/courses/{cid}/assignments/{aid}/submissions/{uid}",
+                data={"submission[posted_grade]": grade},
+            )
+            print(f"put   {uid}\t{grade}\t{row.get('canvasName')}")
+        if grade == "complete":
+            n_complete += 1
+        else:
+            n_incomplete += 1
+    mode = "dry-run" if args.dry_run else "posted"
+    print(f"{mode}  {n_complete} complete / {n_incomplete} incomplete / {len(rows)} rows")
+
+
+def _valid_github_username(name: str) -> bool:
+    return bool(GITHUB_USER_RE.fullmatch(name or ""))
+
+
+def _consent_yes(value: str) -> bool:
+    return (value or "").strip().lower() == "yes"
+
+
+def _assert_safe_template(src: Path) -> None:
+    if not src.is_dir():
+        raise SystemExit(f"Missing student template: {src}")
+    for path in src.rglob("*"):
+        rel = path.relative_to(src)
+        parts = set(rel.parts)
+        if parts & FORBIDDEN_TEMPLATE_NAMES:
+            raise SystemExit(f"Refusing template path that looks like instructor secrets: {rel}")
+        if path.is_file() and path.name == ".env":
+            raise SystemExit(f"Refusing to mint a .env: {rel}")
+
+
+def _gh(*args: str, check: bool = True) -> subprocess.CompletedProcess:
+    env = os.environ.copy()
+    env["GH_PROMPT_DISABLED"] = "1"
+    return subprocess.run(["gh", *args], capture_output=True, text=True, check=check, env=env)
+
+
+def _repo_exists(full_name: str) -> bool:
+    result = _gh("repo", "view", full_name, "--json", "name,url,isPrivate", check=False)
+    return result.returncode == 0
+
+
+def _repo_full_name(username: str) -> str:
+    return f"{GITHUB_OWNER}/psych302-305-{username}"
+
+
+def build_mint_plan(rows: list[dict]) -> list[dict]:
+    """Classify each roster row. Network: existence check only for eligible usernames."""
+    plan = []
+    for row in rows:
+        username = (row.get("github_username") or "").strip()
+        consent = (row.get("repo_consent") or "").strip()
+        item = {
+            "canvasUserId": row.get("canvasUserId"),
+            "canvasName": row.get("canvasName"),
+            "github_username": username,
+            "repo_consent": consent,
+            "repo": None,
+            "action": None,
+            "reason": None,
+        }
+        if not username:
+            item["action"] = "skip-no-username"
+            item["reason"] = "no parsed GitHub username"
+        elif not _consent_yes(consent):
+            item["action"] = "skip-no-consent"
+            item["reason"] = f"repo_consent={consent or '(empty)'}"
+        elif not _valid_github_username(username):
+            item["action"] = "skip-invalid-username"
+            item["reason"] = f"username not a legal GitHub login: {username!r}"
+        else:
+            full = _repo_full_name(username)
+            item["repo"] = full
+            if _repo_exists(full):
+                item["action"] = "skip-exists"
+                item["reason"] = "same-name repo already exists; will not overwrite or force-push"
+            else:
+                item["action"] = "create"
+                item["reason"] = "parsed username and repo_consent=yes"
+        plan.append(item)
+    return plan
+
+
+def _copy_student_workspace(dest: Path) -> None:
+    _assert_safe_template(STUDENT_TEMPLATE)
+    shutil.copytree(
+        STUDENT_TEMPLATE,
+        dest,
+        ignore=shutil.ignore_patterns(".env", "pipeline", ".git"),
+    )
+    _assert_safe_template(dest)
+
+
+def _mint_new_repo(username: str) -> dict:
+    full = _repo_full_name(username)
+    if _repo_exists(full):
+        return {"ok": False, "action": "skip-exists", "repo": full, "html_url": None}
+    with tempfile.TemporaryDirectory() as tmp:
+        dest = Path(tmp) / f"psych302-305-{username}"
+        _copy_student_workspace(dest)
+        subprocess.run(["git", "init", "-b", "main"], cwd=dest, check=True, capture_output=True)
+        subprocess.run(["git", "config", "user.name", "kylemath"], cwd=dest, check=True, capture_output=True)
+        subprocess.run(
+            ["git", "config", "user.email", "kylemath@users.noreply.github.com"],
+            cwd=dest,
+            check=True,
+            capture_output=True,
+        )
+        subprocess.run(["git", "add", "-A"], cwd=dest, check=True, capture_output=True)
+        subprocess.run(
+            ["git", "commit", "-m", "Initial PSYCH 302/305 studio workspace"],
+            cwd=dest,
+            check=True,
+            capture_output=True,
+        )
+        _gh(
+            "repo",
+            "create",
+            full,
+            "--private",
+            "--source",
+            str(dest),
+            "--remote",
+            "origin",
+            "--push",
+        )
+    view = _gh("repo", "view", full, "--json", "url,isPrivate")
+    meta = json.loads(view.stdout)
+    return {
+        "ok": True,
+        "action": "create",
+        "repo": full,
+        "html_url": meta.get("url"),
+        "isPrivate": meta.get("isPrivate"),
+    }
+
+
+def _ensure_collaborator(username: str) -> None:
+    full = _repo_full_name(username)
+    result = _gh(
+        "api",
+        "-X",
+        "PUT",
+        f"repos/{full}/collaborators/{username}",
+        "-f",
+        "permission=push",
+        check=False,
+    )
+    if result.returncode != 0:
+        raise RuntimeError(result.stderr or result.stdout)
+
+
+def cmd_repos_mint(args: argparse.Namespace) -> None:
+    """Mint thin private studio repos. Default is dry-run; pass --apply to create."""
+    roster_path = OUT / "week0_roster.json"
+    if not roster_path.exists():
+        raise SystemExit("No week0_roster.json. Run week0-pull first.")
+    _assert_safe_template(STUDENT_TEMPLATE)
+    rows = json.loads(roster_path.read_text())
+    plan = build_mint_plan(rows)
+    counts: dict[str, int] = {}
+    for item in plan:
+        counts[item["action"]] = counts.get(item["action"], 0) + 1
+        repo = item["repo"] or "—"
+        print(f"{item['action']:<24} {item['canvasUserId']}\t{item['canvasName']}\t{item['github_username'] or '—'}\t{repo}\t{item['reason']}")
+    print("plan  " + "  ".join(f"{k}={v}" for k, v in sorted(counts.items())))
+
+    apply = bool(args.apply) and not args.dry_run
+    if not apply:
+        print("dry-run only. Pass --apply to create repos for action=create.")
+        return
+
+    for item in plan:
+        try:
+            if item["action"] == "create":
+                result = _mint_new_repo(item["github_username"])
+                if result["action"] == "skip-exists":
+                    print(f"race-skip-exists         {item['canvasName']}\t{result['repo']}")
+                    _ensure_collaborator(item["github_username"])
+                    print(f"collaborator             {item['github_username']} push on {result['repo']}")
+                    continue
+                _ensure_collaborator(item["github_username"])
+                print(
+                    f"created                  {result['repo']}\t{result.get('html_url')}\tcollab={item['github_username']}"
+                )
+            elif item["action"] == "skip-exists":
+                _ensure_collaborator(item["github_username"])
+                print(
+                    f"collaborator             {item['github_username']} push on {item['repo']} (existing, not overwritten)"
+                )
+        except (RuntimeError, subprocess.CalledProcessError) as exc:
+            err = getattr(exc, "stderr", None) or str(exc)
+            print(f"error                    {item['canvasName']}\t{item.get('repo') or item['github_username']}\t{err[:400]}")
+
+
+def cmd_modules_create(_: argparse.Namespace) -> None:
+    from course_modules import run
+
+    client = _client()
+    run(client, lambda method, path, **kw: _notify_request(client, method, path, **kw), _read, _save_ids)
+
+
 def main() -> None:
     p = argparse.ArgumentParser(description="PSYCH 302/305 Canvas studio pipeline")
     sub = p.add_subparsers(dest="cmd", required=True)
@@ -184,6 +421,14 @@ def main() -> None:
     c.add_argument("--replace", action="store_true")
     c.set_defaults(func=cmd_week0_create)
     sub.add_parser("week0-pull").set_defaults(func=cmd_week0_pull)
+    g = sub.add_parser("week0-grade")
+    g.add_argument("--dry-run", action="store_true", help="Print complete/incomplete; do not PUT")
+    g.set_defaults(func=cmd_week0_grade)
+    m = sub.add_parser("repos-mint")
+    m.add_argument("--dry-run", action="store_true", help="Print the plan only (default if --apply is omitted)")
+    m.add_argument("--apply", action="store_true", help="Create private repos and add collaborators")
+    m.set_defaults(func=cmd_repos_mint)
+    sub.add_parser("modules-create").set_defaults(func=cmd_modules_create)
     args = p.parse_args()
     args.func(args)
 

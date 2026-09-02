@@ -13,7 +13,7 @@ Week 0 (GitHub username): https://canvas.ualberta.ca/courses/35483/assignments/8
 | Week | Date | Tool | Example | Page |
 | --- | --- | --- | --- | --- |
 | 0 | 2 Sep (first hour) | GitHub account | Canvas form | [week0.html](week0.html) |
-| 1 | 2 Sep (then) | Your own repo or PR | Make a page about you in three ways | [playground.html](playground.html) |
+| 1 | 2 Sep (then) | Own repo, Pages, fork | Make a page about you in three ways | [playground.html](playground.html) |
 | 2 | 9 Sep | Timed response, CSV | Simple / choice RT | [rt.html](rt.html) |
 | 3 | 16 Sep | Form and score | Short inventory | [inventory.html](inventory.html) |
 | 4 | 23 Sep | Descriptives | Mean, SD, histogram | [stats.html](stats.html) |

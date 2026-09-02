@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Week 5 · Comparison · PSYCH 302 / 305</title>
+    <link rel="stylesheet" href="studio.css" />
+    <style>
+      select {
+        background: #0b0f14;
+        color: var(--ink);
+        border: 1px solid var(--panel-border);
+        border-radius: 8px;
+        padding: 8px;
+        font-family: "Segoe UI", sans-serif;
+      }
+      .controls { display: grid; gap: 10px; margin: 12px 0; font-family: "Segoe UI", sans-serif; font-size: 0.88rem; color: var(--muted); }
+      table { width: 100%; border-collapse: collapse; font-family: "Segoe UI", sans-serif; font-size: 0.88rem; }
+      th, td { text-align: left; padding: 6px 0; border-bottom: 1px solid var(--panel-border); }
+      svg { width: 100%; height: 200px; }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <nav class="topnav">
+        <a class="brand" href="index.html">
+          <small>Week 5 · PSYCH 302 / 305</small>
+          <strong>Comparison</strong>
+        </a>
+        <div class="nav-links">
+          <a href="index.html">Overview</a>
+          <a href="schedule.html">Schedule</a>
+          <a href="workflow.html">Computing</a>
+          <a href="playground.html">Week 1</a>
+          <a href="labs.html">Labs</a>
+        </div>
+      </nav>
+
+      <header class="panel" style="margin-bottom: 18px">
+        <div class="kicker">Week 5 laboratory</div>
+        <h1>Two conditions, one sentence</h1>
+        <p class="lede">
+          Write the predicted direction before you look. Then compare two groups
+          from a CSV: simple versus choice reaction time, or two inventory
+          subscales. Report two means, two ns, and whether the difference
+          matched the prediction.
+        </p>
+      </header>
+
+      <div class="grid-2">
+        <section class="panel">
+          <div class="kicker">Input</div>
+          <h2>Split a table</h2>
+          <div class="controls">
+            <label>CSV file <input type="file" id="fileEl" accept=".csv,text/csv" /></label>
+            <label>Value column <select id="valEl"></select></label>
+            <label>Group column <select id="grpEl"></select></label>
+            <label>Group A <select id="aEl"></select></label>
+            <label>Group B <select id="bEl"></select></label>
+          </div>
+          <div class="actions">
+            <button type="button" id="rtBtn" class="secondary">Sample: simple vs choice</button>
+            <button type="button" id="invBtn" class="secondary">Sample: two subscales</button>
+          </div>
+          <p class="muted" style="margin-top: 12px" id="status">Write your prediction first, then load data.</p>
+        </section>
+        <aside class="panel">
+          <div class="kicker">Difference = B − A</div>
+          <h2>Comparison</h2>
+          <div class="stat" id="diffEl">—</div>
+          <p class="muted" id="summaryEl">No groups yet.</p>
+          <table>
+            <thead><tr><th>Group</th><th>n</th><th>Mean</th><th>SD</th></tr></thead>
+            <tbody id="cmpBody"><tr><td colspan="4">Load a file.</td></tr></tbody>
+          </table>
+          <svg id="bars" viewBox="0 0 640 200" role="img" aria-label="Two means"></svg>
+        </aside>
+      </div>
+    </div>
+    <script>
+      let rows = [];
+      let headers = [];
+
+      function mean(xs) { return xs.reduce((a, b) => a + b, 0) / xs.length; }
+      function sd(xs) {
+        if (xs.length < 2) return null;
+        const m = mean(xs);
+        return Math.sqrt(xs.reduce((a, x) => a + (x - m) ** 2, 0) / (xs.length - 1));
+      }
+
+      function parseCsv(text) {
+        const lines = text.trim().split(/\r?\n/).filter((line) => line && !line.startsWith("#"));
+        headers = lines[0].split(",").map((h) => h.trim());
+        rows = lines.slice(1).map((line) => {
+          const cells = line.split(",");
+          const obj = {};
+          headers.forEach((h, i) => { obj[h] = cells[i] === undefined ? "" : cells[i].trim(); });
+          return obj;
+        });
+        const numeric = headers.filter((h) => rows.some((r) => r[h] !== "" && !Number.isNaN(Number(r[h]))));
+        const cats = headers.filter((h) => !numeric.includes(h) || h === "kind" || h === "domain" || h === "colour");
+        document.getElementById("valEl").innerHTML = numeric.map((h) => `<option value="${h}">${h}</option>`).join("");
+        document.getElementById("grpEl").innerHTML = cats.map((h) => `<option value="${h}">${h}</option>`).join("");
+        if (numeric.includes("rt")) document.getElementById("valEl").value = "rt";
+        if (numeric.includes("scored") && !numeric.includes("rt")) document.getElementById("valEl").value = "scored";
+        if (cats.includes("kind")) document.getElementById("grpEl").value = "kind";
+        if (cats.includes("domain")) document.getElementById("grpEl").value = "domain";
+        fillGroups();
+        render();
+      }
+
+      function fillGroups() {
+        const grp = document.getElementById("grpEl").value;
+        const levels = [...new Set(rows.map((r) => r[grp]).filter(Boolean))];
+        const opts = levels.map((v) => `<option value="${v}">${v}</option>`).join("");
+        document.getElementById("aEl").innerHTML = opts;
+        document.getElementById("bEl").innerHTML = opts;
+        if (levels.includes("simple")) document.getElementById("aEl").value = "simple";
+        if (levels.includes("choice")) document.getElementById("bEl").value = "choice";
+        if (levels.includes("extraversion")) document.getElementById("aEl").value = "extraversion";
+        if (levels.includes("conscientiousness")) document.getElementById("bEl").value = "conscientiousness";
+      }
+
+      function groupVals(label) {
+        const val = document.getElementById("valEl").value;
+        const grp = document.getElementById("grpEl").value;
+        return rows
+          .filter((r) => r[grp] === label)
+          .map((r) => Number(r[val]))
+          .filter((x) => Number.isFinite(x) && !(val === "rt" && (x < 150 || x > 2500)));
+      }
+
+      function render() {
+        const aName = document.getElementById("aEl").value;
+        const bName = document.getElementById("bEl").value;
+        const a = groupVals(aName);
+        const b = groupVals(bName);
+        if (!a.length || !b.length) {
+          document.getElementById("diffEl").textContent = "—";
+          document.getElementById("summaryEl").textContent = "Need usable values in both groups.";
+          return;
+        }
+        const ma = mean(a);
+        const mb = mean(b);
+        const diff = mb - ma;
+        document.getElementById("diffEl").textContent = (Math.abs(diff) >= 10 ? Math.round(diff) : diff.toFixed(2));
+        document.getElementById("summaryEl").textContent = `${bName} minus ${aName}. RT exclusions 150–2500 ms still apply when the value column is rt.`;
+        const fmt = (xs) => {
+          const s = sd(xs);
+          return { n: xs.length, m: mean(xs), s };
+        };
+        const A = fmt(a);
+        const B = fmt(b);
+        document.getElementById("cmpBody").innerHTML = [ [aName, A], [bName, B] ].map(([name, st]) =>
+          `<tr><td>${name}</td><td>${st.n}</td><td>${st.m.toFixed(2)}</td><td>${st.s === null ? "—" : st.s.toFixed(2)}</td></tr>`
+        ).join("");
+        const maxM = Math.max(A.m, B.m, 1);
+        const bar = (x, y, h, label) =>
+          `<rect x="${x}" y="${200 - h - 24}" width="80" height="${h}" fill="#e8b86d"></rect>
+           <text x="${x + 40}" y="190" fill="#b7b1a4" font-size="12" text-anchor="middle">${label}</text>`;
+        document.getElementById("bars").innerHTML =
+          bar(180, 0, (A.m / maxM) * 140, aName) + bar(360, 0, (B.m / maxM) * 140, bName);
+        document.getElementById("status").textContent = `${rows.length} rows loaded.`;
+      }
+
+      async function loadUrl(url) {
+        parseCsv(await fetch(url).then((r) => r.text()));
+      }
+
+      document.getElementById("fileEl").addEventListener("change", (event) => {
+        const file = event.target.files[0];
+        if (file) file.text().then(parseCsv);
+      });
+      ["valEl", "aEl", "bEl"].forEach((id) => document.getElementById(id).addEventListener("change", render));
+      document.getElementById("grpEl").addEventListener("change", () => { fillGroups(); render(); });
+      document.getElementById("rtBtn").addEventListener("click", () => loadUrl("data/sample-rt.csv"));
+      document.getElementById("invBtn").addEventListener("click", () => loadUrl("data/sample-inventory.csv"));
+    </script>
+  </body>
+</html>

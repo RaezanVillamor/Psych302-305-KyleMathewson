@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Week 3 · Inventory · PSYCH 302 / 305</title>
+    <link rel="stylesheet" href="studio.css" />
+    <style>
+      .item {
+        padding: 14px 0;
+        border-bottom: 1px solid var(--panel-border);
+      }
+      .item p { margin: 0 0 10px; color: var(--ink); }
+      .scale {
+        display: grid;
+        grid-template-columns: repeat(5, minmax(0, 1fr));
+        gap: 6px;
+        font-family: "Segoe UI", sans-serif;
+        font-size: 0.78rem;
+        color: var(--muted);
+      }
+      .scale label {
+        display: grid;
+        gap: 6px;
+        justify-items: center;
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid var(--panel-border);
+        border-radius: 10px;
+        padding: 8px 4px;
+        cursor: pointer;
+      }
+      table { width: 100%; border-collapse: collapse; font-family: "Segoe UI", sans-serif; font-size: 0.88rem; }
+      th, td { text-align: left; padding: 6px 0; border-bottom: 1px solid var(--panel-border); }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <nav class="topnav">
+        <a class="brand" href="index.html">
+          <small>Week 3 · PSYCH 302 / 305</small>
+          <strong>Inventory</strong>
+        </a>
+        <div class="nav-links">
+          <a href="index.html">Overview</a>
+          <a href="schedule.html">Schedule</a>
+          <a href="workflow.html">Computing</a>
+          <a href="playground.html">Week 1</a>
+          <a href="labs.html">Labs</a>
+        </div>
+      </nav>
+
+      <header class="panel" style="margin-bottom: 18px">
+        <div class="kicker">Week 3 laboratory</div>
+        <h1>A form, a score, a table</h1>
+        <p class="lede">
+          Ten statements, two in each of five familiar domains. Answer as you
+          usually are, not as you wish you were. Write a predicted range for
+          one subscale before you start. This is a teaching instrument, not a
+          diagnosis and not a published Big Five test.
+        </p>
+      </header>
+
+      <div class="grid-2">
+        <section class="panel">
+          <div class="kicker">1 = strongly disagree · 5 = strongly agree</div>
+          <h2>Items</h2>
+          <form id="invForm"></form>
+          <div class="actions" style="margin-top: 16px">
+            <button type="button" id="scoreBtn" class="primary">Score</button>
+            <button type="button" id="exportBtn" class="secondary">Export CSV</button>
+          </div>
+          <p class="muted" style="margin-top: 12px" id="status">Answer every item, then score.</p>
+        </section>
+        <aside class="panel">
+          <div class="kicker">Scored 1–5 after reverse items</div>
+          <h2>Subscale means</h2>
+          <p class="muted">
+            Even-numbered items are reverse-scored (6 minus the response).
+            A subscale mean uses two items.
+          </p>
+          <div class="stat" id="meanEl">—</div>
+          <p class="muted" id="summaryEl">Overall mean after reverse scoring.</p>
+          <table>
+            <thead><tr><th>Domain</th><th>Mean</th></tr></thead>
+            <tbody id="scoreBody"><tr><td colspan="2">Not scored yet.</td></tr></tbody>
+          </table>
+        </aside>
+      </div>
+    </div>
+    <script>
+      const ITEMS = [
+        { n: 1, domain: "extraversion", reverse: 0, text: "I enjoy starting conversations with people I do not know well." },
+        { n: 2, domain: "extraversion", reverse: 1, text: "I prefer to keep to myself in a group." },
+        { n: 3, domain: "agreeableness", reverse: 0, text: "I try to be considerate even when I disagree." },
+        { n: 4, domain: "agreeableness", reverse: 1, text: "I have little patience for other people's mistakes." },
+        { n: 5, domain: "conscientiousness", reverse: 0, text: "I finish tasks I start, even when they are dull." },
+        { n: 6, domain: "conscientiousness", reverse: 1, text: "I often leave work until the last moment." },
+        { n: 7, domain: "stability", reverse: 0, text: "I stay calm when plans change suddenly." },
+        { n: 8, domain: "stability", reverse: 1, text: "I worry about small problems for a long time." },
+        { n: 9, domain: "openness", reverse: 0, text: "I like trying unfamiliar ideas or activities." },
+        { n: 10, domain: "openness", reverse: 1, text: "I prefer routines I already know." },
+      ];
+      const DOMAINS = ["extraversion", "agreeableness", "conscientiousness", "stability", "openness"];
+      const form = document.getElementById("invForm");
+      let lastRows = [];
+
+      form.innerHTML = ITEMS.map((item) => `
+        <div class="item">
+          <p><strong>${item.n}.</strong> ${item.text}</p>
+          <div class="scale" role="radiogroup" aria-label="Item ${item.n}">
+            ${[1, 2, 3, 4, 5].map((v) => `
+              <label><input type="radio" name="item${item.n}" value="${v}" required /> ${v}</label>
+            `).join("")}
+          </div>
+        </div>
+      `).join("");
+
+      function mean(xs) {
+        return xs.reduce((a, b) => a + b, 0) / xs.length;
+      }
+
+      function score() {
+        const rows = [];
+        for (const item of ITEMS) {
+          const picked = form.querySelector(`input[name="item${item.n}"]:checked`);
+          if (!picked) {
+            document.getElementById("status").textContent = "Answer every item.";
+            return null;
+          }
+          const response = Number(picked.value);
+          const scored = item.reverse ? 6 - response : response;
+          rows.push({ ...item, response, scored });
+        }
+        lastRows = rows;
+        const overall = mean(rows.map((r) => r.scored));
+        document.getElementById("meanEl").textContent = overall.toFixed(2);
+        document.getElementById("summaryEl").textContent = "n = 10 items · teaching instrument only";
+        document.getElementById("scoreBody").innerHTML = DOMAINS.map((domain) => {
+          const cell = rows.filter((r) => r.domain === domain);
+          return `<tr><td>${domain}</td><td>${mean(cell.map((r) => r.scored)).toFixed(2)}</td></tr>`;
+        }).join("");
+        document.getElementById("status").textContent = "Scored. Export the CSV into data/.";
+        return rows;
+      }
+
+      function exportCsv() {
+        const rows = lastRows.length ? lastRows : score();
+        if (!rows) return;
+        const header = "item,domain,reverse,response,scored";
+        const lines = rows.map((r) => [r.n, r.domain, r.reverse, r.response, r.scored].join(","));
+        const subscales = DOMAINS.map((domain) => {
+          const cell = rows.filter((r) => r.domain === domain);
+          return `# subscale,${domain},${mean(cell.map((r) => r.scored)).toFixed(3)}`;
+        });
+        const blob = new Blob([header + "\n" + lines.join("\n") + "\n" + subscales.join("\n") + "\n"], { type: "text/csv" });
+        const a = document.createElement("a");
+        a.href = URL.createObjectURL(blob);
+        a.download = "inventory-week03.csv";
+        a.click();
+        URL.revokeObjectURL(a.href);
+      }
+
+      document.getElementById("scoreBtn").addEventListener("click", score);
+      document.getElementById("exportBtn").addEventListener("click", exportCsv);
+    </script>
+  </body>
+</html>

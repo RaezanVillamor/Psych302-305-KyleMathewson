@@ -18,7 +18,7 @@
           <a href="schedule.html" aria-current="page">Schedule</a>
           <a href="workflow.html">Computing</a>
           <a href="playground.html">Week 1</a>
-          <a href="rt.html">Week 2</a>
+          <a href="labs.html">Labs</a>
         </div>
       </nav>
 
@@ -28,12 +28,13 @@
         <p class="lede">
           Twelve Wednesday evenings, 18:00–21:00. Each week has one computing
           tool and one ordinary psychology example. The University is closed
-          30 September. Reading Week includes 11 November. Reports (weeks 1–9)
-          are due the following Tuesday at 17:00; drop the lowest. Copy
-          <a href="lab-notes/TEMPLATE.md">lab-notes/TEMPLATE.md</a>.
+          30 September. Reading Week includes 11 November. Weekly reports
+          (weeks 1–9) are due the following Tuesday at 17:00; drop the lowest.
+          Copy <a href="lab-notes/TEMPLATE.md">lab-notes/TEMPLATE.md</a>.
         </p>
         <div class="equation">
-          18:00 introduction · 18:25 demonstration · 18:40 exercise · 19:15 break · 19:25 results · 20:05 modification · 20:45 discussion
+          50% weekly reports · 15% midterm check-in · 35% individual final
+          <small>No graded group project. No graded peer review.</small>
         </div>
         <nav class="toc" aria-label="Jump to week">
           <a href="#w0"><b>0 · before</b>GitHub account</a>
@@ -44,11 +45,11 @@
           <a href="#w5"><b>5 · 7 Oct</b>Comparison</a>
           <a href="#w6"><b>6 · 14 Oct</b>Citation</a>
           <a href="#w7"><b>7 · 21 Oct</b>Methods</a>
-          <a href="#w8"><b>8 · 28 Oct</b>Results page</a>
+          <a href="#w8"><b>8 · 28 Oct</b>Check-in</a>
           <a href="#w9"><b>9 · 4 Nov</b>Sample size</a>
-          <a href="#w10"><b>10 · 18 Nov</b>Proposal</a>
-          <a href="#w11"><b>11 · 25 Nov</b>Project</a>
-          <a href="#w12"><b>12 · 2 Dec</b>Presentations</a>
+          <a href="#w10"><b>10 · 18 Nov</b>Workshop</a>
+          <a href="#w11"><b>11 · 25 Nov</b>Project lab</a>
+          <a href="#w12"><b>12 · 2 Dec</b>Final due</a>
         </nav>
       </header>
 
@@ -131,17 +132,18 @@
       <article class="panel meeting" id="w3">
         <div class="meeting-head">
           <div class="when">Week 3 · Wednesday 16 September 2026</div>
-          <span class="muted">page to be added</span>
+          <a href="inventory.html">inventory.html</a>
         </div>
         <h2>Tool: a form, a score, and a data table</h2>
         <p class="muted">
-          Example: a short personality or mood inventory (for example a 10-item
-          Big Five excerpt). Items, a Likert scale, a total or subscale score, CSV.
+          Example: a ten-item teaching inventory with two items in each of five
+          domains. Likert responses, reverse scoring, subscale means, CSV.
+          This is a classroom instrument, not a clinical scale.
         </p>
         <div class="agenda">
           <dl>
             <dt>18:00 Introduction</dt>
-            <dd>Self-report as data, not as a diagnosis. Write a predicted score range.</dd>
+            <dd>Self-report as data, not as a diagnosis. Write a predicted range for one subscale.</dd>
             <dt>18:25 Demonstration</dt>
             <dd>Complete the scale once as a class walk-through. Export.</dd>
             <dt>18:40 Exercise</dt>
@@ -149,20 +151,20 @@
           </dl>
           <dl>
             <dt>19:25 Results</dt>
-            <dd>Report the score and what it is (and is not) a measure of.</dd>
+            <dd>Report one subscale mean and what it is (and is not) a measure of.</dd>
             <dt>20:05 Modification</dt>
-            <dd><strong>Arts:</strong> wording and layout of the items. <strong>Science:</strong> add one reverse-scored item or a second subscale.</dd>
+            <dd><strong>Arts:</strong> wording and layout of the items. <strong>Science:</strong> check a reverse-scored item by hand.</dd>
             <dt>Reading</dt>
-            <dd>A short Big Five or scale-construction primer from the instructor.</dd>
+            <dd>A short scale-construction note from the instructor.</dd>
           </dl>
         </div>
-        <p class="muted"><strong>Report:</strong> score, item count, one limitation of self-report. CSV in <code>data/</code>.</p>
+        <p class="muted"><strong>Report:</strong> one subscale, item count, one limitation of self-report. CSV in <code>data/</code>.</p>
       </article>
 
       <article class="panel meeting" id="w4">
         <div class="meeting-head">
           <div class="when">Week 4 · Wednesday 23 September 2026</div>
-          <span class="muted">page to be added</span>
+          <a href="stats.html">stats.html</a>
         </div>
         <h2>Tool: descriptive statistics on a CSV</h2>
         <p class="muted">
@@ -182,9 +184,9 @@
             <dt>19:25 Results</dt>
             <dd>Report mean, SD, and n. Note any values you excluded and why.</dd>
             <dt>20:05 Modification</dt>
-            <dd><strong>Arts:</strong> the figure. <strong>Science:</strong> a second descriptive (median or a split by first vs second half).</dd>
+            <dd><strong>Arts:</strong> the figure. <strong>Science:</strong> a second descriptive (median or first vs second half).</dd>
             <dt>Reading</dt>
-            <dd>A one-page descriptives primer.</dd>
+            <dd>A one-page descriptives primer on the laboratory page.</dd>
           </dl>
         </div>
         <p class="muted"><strong>Report:</strong> due Tuesday 29 September (no class on the 30th).</p>
@@ -199,7 +201,7 @@
       <article class="panel meeting" id="w5">
         <div class="meeting-head">
           <div class="when">Week 5 · Wednesday 7 October 2026</div>
-          <span class="muted">page to be added</span>
+          <a href="compare.html">compare.html</a>
         </div>
         <h2>Tool: a two-condition comparison</h2>
         <p class="muted">
@@ -211,7 +213,7 @@
             <dt>18:00 Introduction</dt>
             <dd>A difference needs a prediction and a spread, not only two means.</dd>
             <dt>18:25 Demonstration</dt>
-            <dd>Compare two columns from a sample file.</dd>
+            <dd>Compare two groups from a sample file.</dd>
             <dt>18:40 Exercise</dt>
             <dd>Run or reuse two conditions from your own data.</dd>
           </dl>
@@ -219,9 +221,9 @@
             <dt>19:25 Results</dt>
             <dd>Two means, two ns, one sentence on the direction of the difference.</dd>
             <dt>20:05 Modification</dt>
-            <dd><strong>Arts:</strong> a table a classmate can read. <strong>Science:</strong> a third descriptive or a note on overlap.</dd>
+            <dd><strong>Arts:</strong> a table a classmate can read. <strong>Science:</strong> a note on overlap.</dd>
             <dt>Reading</dt>
-            <dd>None required beyond a one-page comparison note.</dd>
+            <dd>None required beyond the note on the laboratory page.</dd>
           </dl>
         </div>
         <p class="muted"><strong>Report:</strong> the comparison you wrote at 18:10 and whether the data agreed. Due Tuesday 13 October.</p>
@@ -230,11 +232,12 @@
       <article class="panel meeting" id="w6">
         <div class="meeting-head">
           <div class="when">Week 6 · Wednesday 14 October 2026</div>
+          <a href="cite.html">cite.html</a>
         </div>
         <h2>Tool: find, cite, and file a paper</h2>
         <p class="muted">
-          Example: Donders (1868) or a short Big Five methods paper. Half-page
-          annotation in the repository, with a complete reference.
+          Example: Donders (1868) or a short methods paper on self-report.
+          Half-page annotation in the repository, with a complete reference.
         </p>
         <div class="agenda">
           <dl>
@@ -247,19 +250,20 @@
           </dl>
           <dl>
             <dt>19:25 Results</dt>
-            <dd>Read one annotation aloud: question, method, one limit.</dd>
+            <dd>Read your annotation: question, method, one limit. No exchange of drafts.</dd>
             <dt>20:05 Modification</dt>
             <dd><strong>Arts:</strong> clarity of the note. <strong>Science:</strong> name the dependent measure in the paper.</dd>
             <dt>Preparation</dt>
             <dd>Library access. No extra article beyond the one you file.</dd>
           </dl>
         </div>
-        <p class="muted"><strong>Report:</strong> the annotation file in the repository, with the reference in APA or the course style.</p>
+        <p class="muted"><strong>Report:</strong> <a href="lab-notes/ANNOTATION.md">lab-notes/ANNOTATION.md</a> and a file or URL in <code>papers/</code>.</p>
       </article>
 
       <article class="panel meeting" id="w7">
         <div class="meeting-head">
           <div class="when">Week 7 · Wednesday 21 October 2026</div>
+          <a href="methods.html">methods.html</a>
         </div>
         <h2>Tool: write a Methods section</h2>
         <p class="muted">
@@ -269,7 +273,7 @@
         <div class="agenda">
           <dl>
             <dt>18:00 Introduction</dt>
-            <dd>Participants, materials, procedure, data handling. Write so a classmate could repeat it.</dd>
+            <dd>Participants, materials, procedure, data handling. Write so someone else could repeat it.</dd>
             <dt>18:25 Demonstration</dt>
             <dd>A short weak Methods and a clear one.</dd>
             <dt>18:40 Exercise</dt>
@@ -277,25 +281,26 @@
           </dl>
           <dl>
             <dt>19:25 Results</dt>
-            <dd>Exchange drafts. Can the other person run the study?</dd>
+            <dd>Instructor checklist: could a stranger run this? No draft exchange.</dd>
             <dt>20:05 Modification</dt>
             <dd><strong>Arts:</strong> wording. <strong>Science:</strong> timing, keys, and exclusion rules stated in numbers.</dd>
             <dt>Reading</dt>
             <dd>None. Bring your Week 2 or Week 3 CSV.</dd>
           </dl>
         </div>
-        <p class="muted"><strong>Report:</strong> the Methods file in the repository.</p>
+        <p class="muted"><strong>Report:</strong> <a href="lab-notes/METHODS.md">lab-notes/METHODS.md</a> in the repository.</p>
       </article>
 
       <article class="panel meeting" id="w8">
         <div class="meeting-head">
           <div class="when">Week 8 · Wednesday 28 October 2026</div>
-          <span class="muted">in-class critique 1</span>
+          <span class="muted">midterm check-in · 15%</span>
         </div>
         <h2>Tool: a results webpage</h2>
         <p class="muted">
           Example: one claim from your data, a figure, and a paragraph. The
-          critique is graded. This is the project seed.
+          graded work tonight is the individual
+          <a href="project/CHECKIN.md">midterm check-in</a>, not a critique.
         </p>
         <div class="agenda">
           <dl>
@@ -304,18 +309,18 @@
             <dt>18:25 Demonstration</dt>
             <dd>A page that states a claim and one that does not.</dd>
             <dt>18:40 Exercise</dt>
-            <dd>Pairs build a short HTML results page from an existing CSV.</dd>
+            <dd>Build a short HTML results page from an existing CSV. Complete the check-in file.</dd>
           </dl>
           <dl>
             <dt>19:25 Results</dt>
-            <dd>Does the number appear without explanation from the authors?</dd>
-            <dt>20:05 Discussion</dt>
-            <dd>Four-minute presentations. The room asks only: what was measured, and what is the claim?</dd>
+            <dd>Instructor reads the check-in: question, tool, prediction, existing files.</dd>
+            <dt>20:05 Modification</dt>
+            <dd>Revise the check-in until the project is one comparison, not a programme of research.</dd>
             <dt>Preparation</dt>
-            <dd>One-paragraph proposal. No additional article.</dd>
+            <dd>Bring a CSV and a one-sentence project idea.</dd>
           </dl>
         </div>
-        <p class="muted"><strong>Report:</strong> link or path to the page, the claim, and what you will keep for the project.</p>
+        <p class="muted"><strong>Due in class:</strong> <a href="project/CHECKIN.md">project/CHECKIN.md</a>. Weekly report: path to the results page and the claim.</p>
       </article>
 
       <article class="panel meeting" id="w9">
@@ -339,109 +344,107 @@
           </dl>
           <dl>
             <dt>19:25 Results</dt>
-            <dd>Read the cautious sentence.</dd>
+            <dd>Read the cautious sentence to yourself, then to the instructor if asked.</dd>
             <dt>20:05 Modification</dt>
             <dd><strong>Arts:</strong> how uncertainty appears on the page. <strong>Science:</strong> what n would make you trust a 30 ms difference.</dd>
             <dt>Reading</dt>
-            <dd>A one-page interval or sample-size note, or Cumming (2014) first pages.</dd>
+            <dd>The note on <a href="sample.html">sample.html</a>.</dd>
           </dl>
         </div>
-        <p class="muted"><strong>Report:</strong> the rewritten claim. Use Reading Week to draft the project proposal.</p>
+        <p class="muted"><strong>Report:</strong> the rewritten claim. Use Reading Week to begin the final page.</p>
       </article>
 
       <article class="panel meeting dark-week">
         <div class="when">No class · 9–13 November 2026</div>
         <h2>Reading Week</h2>
         <p class="muted">
-          Pairs draft a one-page proposal: question, tool, what will be built,
-          what number or page will appear, whose data, and risk. Bring it on
-          18 November. Do not collect classmate data over the break.
+          Work on the individual final. Do not collect classmate data over the
+          break. Self as participant is the default.
         </p>
       </article>
 
       <article class="panel meeting" id="w10">
         <div class="meeting-head">
           <div class="when">Week 10 · Wednesday 18 November 2026</div>
-          <span class="muted">proposal</span>
+          <a href="project.html">project.html</a>
         </div>
-        <h2>Tool: proposal and consent</h2>
+        <h2>Tool: turn the check-in into a page</h2>
         <p class="muted">
-          The pair project uses a tool already taught: reaction time, an
-          inventory, a comparison, or a methods-and-results page. Write one
-          comparison before the first trial.
+          Individual project. Use a tool already taught. No new libraries.
+          Classmate data are optional and must stay in the room unless you
+          wrote a one-screen consent the instructor approved.
         </p>
         <div class="agenda">
           <dl>
             <dt>18:00 Introduction</dt>
-            <dd>Who participates, what is stored, what is shown in week 12, how to withdraw.</dd>
+            <dd>Common failures: no prediction, no file, appearance without a result.</dd>
             <dt>18:25 Demonstration</dt>
-            <dd>One-screen consent and a three-line preregistration.</dd>
+            <dd>A thin page that still states a claim.</dd>
             <dt>18:40 Exercise</dt>
-            <dd>Pairs revise proposals. Instructor approves or returns them.</dd>
+            <dd>Build. Instructor circulates. No peer review.</dd>
           </dl>
           <dl>
-            <dt>19:25 Results</dt>
-            <dd>If the prediction has more than one test, reduce it.</dd>
-            <dt>20:05 Modification</dt>
-            <dd>Begin building. No new libraries.</dd>
-            <dt>Reading</dt>
-            <dd>TCPS 2, Chapter 1, and the course consent template.</dd>
+            <dt>19:25–20:45 Laboratory</dt>
+            <dd>Keep the project to one comparison.</dd>
+            <dt>Preparation</dt>
+            <dd>Bring the midterm check-in and at least one CSV.</dd>
           </dl>
         </div>
-        <p class="muted"><strong>Due in class:</strong> approved proposal. No laboratory report.</p>
+        <p class="muted"><strong>Due:</strong> none tonight. Final is 2 December.</p>
       </article>
 
       <article class="panel meeting" id="w11">
         <div class="meeting-head">
           <div class="when">Week 11 · Wednesday 25 November 2026</div>
+          <a href="project.html">project.html</a>
         </div>
         <h2>Project laboratory</h2>
         <p class="muted">
-          Can a classmate run the page and state the measure or the claim?
+          Can someone who is not you open the page and state the measure or the claim?
         </p>
         <div class="agenda">
           <dl>
             <dt>18:00 Introduction</dt>
-            <dd>Common problems: no file, no prediction, appearance without a result.</dd>
+            <dd>Checklist: file, prediction, result, limit, disclosure.</dd>
             <dt>18:25–20:30 Laboratory time</dt>
-            <dd>Pairs work. Peers run one another’s pages at 20:00.</dd>
+            <dd>Individual work. Instructor circulates.</dd>
             <dt>20:45 Discussion</dt>
-            <dd>What is still missing.</dd>
+            <dd>What is still missing. No graded peer run.</dd>
           </dl>
           <dl>
             <dt>Arts check</dt>
-            <dd>Can a classmate read the page?</dd>
+            <dd>Can a stranger read the page?</dd>
             <dt>Science check</dt>
             <dd>Is there a number or a documented method, and a saved file?</dd>
             <dt>Preparation</dt>
             <dd>Come with a page that already runs.</dd>
           </dl>
         </div>
-        <p class="muted"><strong>Due next week:</strong> running page, 400-word caption or Methods/Results, example CSV if you collected data.</p>
+        <p class="muted"><strong>Due next week:</strong> running page, short Methods/Results, example CSV if you collected data.</p>
       </article>
 
       <article class="panel meeting" id="w12">
         <div class="meeting-head">
           <div class="when">Week 12 · Wednesday 2 December 2026</div>
-          <span class="muted">in-class critique 2 · last meeting</span>
+          <span class="muted">final · 35% · last meeting</span>
         </div>
-        <h2>Presentations</h2>
+        <h2>Submit the page</h2>
         <p class="muted">
-          About four minutes on the page and one minute of questions. No slide
-          deck. The page is the presentation.
+          The page is the examination. There is no slide deck and no graded
+          talk. A few people may demo if time remains; that is not a grade.
         </p>
         <div class="agenda">
           <dl>
             <dt>18:00</dt>
-            <dd>Order drawn. Classmate data remain in the room unless the pair stated otherwise.</dd>
-            <dt>18:10–20:30</dt>
-            <dd>Four minutes plus one.</dd>
+            <dd>Push the final page and <a href="project/FINAL.md">project/FINAL.md</a> checklist.</dd>
+            <dt>18:15–20:30</dt>
+            <dd>Instructor reviews running pages. Optional short demos.</dd>
             <dt>20:30–21:00</dt>
-            <dd>Push the page (ZIP only if git is unavailable). No registrar examination.</dd>
+            <dd>Confirm the push. ZIP only if git is unavailable. No registrar examination.</dd>
           </dl>
           <dl>
             <dt>Graded</dt>
-            <dd>A clear measure or claim, a written prediction, and a stated limit.</dd>
+            <dd>A clear measure or claim, a written prediction, a visible result, and a stated limit.</dd>
             <dt>Not graded</dt>
             <dd>Framework fashion or extra features for their own sake.</dd>
           </dl>
@@ -454,10 +457,10 @@
         <div class="grid-2">
           <div>
             <p class="muted">
-              <strong>40%</strong> laboratory reports, weeks 1–9, Tuesday 17:00. Drop the lowest.
+              <strong>50%</strong> laboratory reports, weeks 1–9, Tuesday 17:00. Drop the lowest.
               Week 4 is due 29 September.<br /><br />
-              <strong>20%</strong> in-class critiques: 28 October and 2 December.<br /><br />
-              <strong>40%</strong> pair project: approved proposal 18 November; running page 2 December.
+              <strong>15%</strong> individual midterm check-in: 28 October, in class.<br /><br />
+              <strong>35%</strong> individual final: running page on 2 December.
             </p>
           </div>
           <div>

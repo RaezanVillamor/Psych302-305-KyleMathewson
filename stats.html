@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Week 4 · Descriptives · PSYCH 302 / 305</title>
+    <link rel="stylesheet" href="studio.css" />
+    <style>
+      select, input[type="number"] {
+        background: #0b0f14;
+        color: var(--ink);
+        border: 1px solid var(--panel-border);
+        border-radius: 8px;
+        padding: 8px;
+        font-family: "Segoe UI", sans-serif;
+      }
+      .controls { display: grid; gap: 10px; margin: 12px 0; font-family: "Segoe UI", sans-serif; font-size: 0.88rem; color: var(--muted); }
+      svg { width: 100%; height: 220px; }
+      table { width: 100%; border-collapse: collapse; font-family: "Segoe UI", sans-serif; font-size: 0.88rem; }
+      th, td { text-align: left; padding: 6px 0; border-bottom: 1px solid var(--panel-border); }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <nav class="topnav">
+        <a class="brand" href="index.html">
+          <small>Week 4 · PSYCH 302 / 305</small>
+          <strong>Descriptives</strong>
+        </a>
+        <div class="nav-links">
+          <a href="index.html">Overview</a>
+          <a href="schedule.html">Schedule</a>
+          <a href="workflow.html">Computing</a>
+          <a href="playground.html">Week 1</a>
+          <a href="labs.html">Labs</a>
+        </div>
+      </nav>
+
+      <header class="panel" style="margin-bottom: 18px">
+        <div class="kicker">Week 4 laboratory</div>
+        <h1>Mean, spread, and a figure</h1>
+        <p class="lede">
+          Load your Week 2 or Week 3 CSV. Report n, mean, and standard deviation.
+          A number without a spread is incomplete. Sample files are here if you
+          have not yet exported your own.
+        </p>
+      </header>
+
+      <div class="grid-2">
+        <section class="panel">
+          <div class="kicker">Input</div>
+          <h2>Load a table</h2>
+          <div class="controls">
+            <label>CSV file <input type="file" id="fileEl" accept=".csv,text/csv" /></label>
+            <label>Numeric column
+              <select id="colEl"></select>
+            </label>
+            <label>Exclude below <input type="number" id="minEl" value="150" /></label>
+            <label>Exclude above <input type="number" id="maxEl" value="2500" /></label>
+          </div>
+          <div class="actions">
+            <button type="button" id="rtBtn" class="secondary">Load sample RT</button>
+            <button type="button" id="invBtn" class="secondary">Load sample inventory</button>
+          </div>
+          <p class="muted" style="margin-top: 12px" id="status">Choose a file or a sample.</p>
+        </section>
+        <aside class="panel">
+          <div class="kicker">Usable values</div>
+          <h2>Summary</h2>
+          <div class="stat" id="meanEl">—</div>
+          <p class="muted" id="summaryEl">n = 0 · SD = — · median = —</p>
+          <table>
+            <tbody id="statBody"></tbody>
+          </table>
+          <svg id="hist" viewBox="0 0 640 220" role="img" aria-label="Histogram"></svg>
+        </aside>
+      </div>
+    </div>
+    <script>
+      const statusEl = document.getElementById("status");
+      const colEl = document.getElementById("colEl");
+      let rows = [];
+      let headers = [];
+
+      function mean(xs) { return xs.reduce((a, b) => a + b, 0) / xs.length; }
+      function sd(xs) {
+        if (xs.length < 2) return null;
+        const m = mean(xs);
+        return Math.sqrt(xs.reduce((a, x) => a + (x - m) ** 2, 0) / (xs.length - 1));
+      }
+      function median(xs) {
+        const s = [...xs].sort((a, b) => a - b);
+        const mid = Math.floor(s.length / 2);
+        return s.length % 2 ? s[mid] : (s[mid - 1] + s[mid]) / 2;
+      }
+
+      function parseCsv(text) {
+        const lines = text.trim().split(/\r?\n/).filter((line) => line && !line.startsWith("#"));
+        headers = lines[0].split(",").map((h) => h.trim());
+        rows = lines.slice(1).map((line) => {
+          const cells = line.split(",");
+          const obj = {};
+          headers.forEach((h, i) => { obj[h] = cells[i] === undefined ? "" : cells[i].trim(); });
+          return obj;
+        });
+        const numeric = headers.filter((h) => rows.some((r) => r[h] !== "" && !Number.isNaN(Number(r[h]))));
+        colEl.innerHTML = numeric.map((h) => `<option value="${h}">${h}</option>`).join("");
+        if (numeric.includes("rt")) colEl.value = "rt";
+        else if (numeric.includes("scored")) colEl.value = "scored";
+        render();
+      }
+
+      function usable() {
+        const col = colEl.value;
+        const lo = Number(document.getElementById("minEl").value);
+        const hi = Number(document.getElementById("maxEl").value);
+        return rows.map((r) => Number(r[col])).filter((x) => Number.isFinite(x) && x >= lo && x <= hi);
+      }
+
+      function render() {
+        const xs = usable();
+        const statBody = document.getElementById("statBody");
+        if (!xs.length) {
+          document.getElementById("meanEl").textContent = "—";
+          document.getElementById("summaryEl").textContent = "n = 0 · SD = — · median = —";
+          statBody.innerHTML = "<tr><td>No usable values in the current range.</td></tr>";
+          document.getElementById("hist").innerHTML = "";
+          return;
+        }
+        const m = mean(xs);
+        const s = sd(xs);
+        const med = median(xs);
+        document.getElementById("meanEl").textContent = (Math.abs(m) >= 20 ? Math.round(m) : m.toFixed(2)) + (colEl.value === "rt" ? " ms" : "");
+        document.getElementById("summaryEl").textContent = `n = ${xs.length} · SD = ${s === null ? "—" : s.toFixed(2)} · median = ${med.toFixed(2)}`;
+        statBody.innerHTML = `
+          <tr><td>Minimum</td><td>${Math.min(...xs)}</td></tr>
+          <tr><td>Maximum</td><td>${Math.max(...xs)}</td></tr>
+          <tr><td>Excluded by range</td><td>${rows.length - xs.length}</td></tr>
+        `;
+        drawHist(xs);
+        statusEl.textContent = `${rows.length} rows loaded.`;
+      }
+
+      function drawHist(xs) {
+        const svg = document.getElementById("hist");
+        const bins = 8;
+        const lo = Math.min(...xs);
+        const hi = Math.max(...xs);
+        const width = hi - lo || 1;
+        const counts = Array(bins).fill(0);
+        xs.forEach((x) => {
+          let i = Math.floor(((x - lo) / width) * bins);
+          if (i === bins) i = bins - 1;
+          counts[i] += 1;
+        });
+        const maxC = Math.max(...counts, 1);
+        const barW = 640 / bins;
+        svg.innerHTML = counts.map((c, i) => {
+          const h = (c / maxC) * 170;
+          const x = i * barW + 8;
+          const y = 190 - h;
+          return `<rect x="${x}" y="${y}" width="${barW - 12}" height="${h}" fill="#e8b86d" opacity="0.85"></rect>
+            <text x="${x + (barW - 12) / 2}" y="210" fill="#b7b1a4" font-size="11" text-anchor="middle">${Math.round(lo + (i * width) / bins)}</text>`;
+        }).join("");
+      }
+
+      async function loadUrl(url) {
+        const text = await fetch(url).then((r) => r.text());
+        parseCsv(text);
+      }
+
+      document.getElementById("fileEl").addEventListener("change", (event) => {
+        const file = event.target.files[0];
+        if (!file) return;
+        file.text().then(parseCsv);
+      });
+      colEl.addEventListener("change", render);
+      document.getElementById("minEl").addEventListener("input", render);
+      document.getElementById("maxEl").addEventListener("input", render);
+      document.getElementById("rtBtn").addEventListener("click", () => {
+        document.getElementById("minEl").value = 150;
+        document.getElementById("maxEl").value = 2500;
+        loadUrl("data/sample-rt.csv");
+      });
+      document.getElementById("invBtn").addEventListener("click", () => {
+        document.getElementById("minEl").value = 1;
+        document.getElementById("maxEl").value = 5;
+        loadUrl("data/sample-inventory.csv");
+      });
+    </script>
+  </body>
+</html>

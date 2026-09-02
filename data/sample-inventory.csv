@@ -1,0 +1,11 @@
+item,domain,reverse,response,scored
+1,extraversion,0,4,4
+2,extraversion,1,2,4
+3,agreeableness,0,5,5
+4,agreeableness,1,2,4
+5,conscientiousness,0,3,3
+6,conscientiousness,1,4,2
+7,stability,0,2,2
+8,stability,1,4,2
+9,openness,0,5,5
+10,openness,1,1,5

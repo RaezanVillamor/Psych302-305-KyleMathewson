@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Week 9 · Small n · PSYCH 302 / 305</title>
+    <link rel="stylesheet" href="studio.css" />
+    <style>
+      input[type="range"] { width: 100%; }
+      svg { width: 100%; height: 180px; }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <nav class="topnav">
+        <a class="brand" href="index.html">
+          <small>Week 9 · PSYCH 302 / 305</small>
+          <strong>Sample size</strong>
+        </a>
+        <div class="nav-links">
+          <a href="index.html">Overview</a>
+          <a href="schedule.html">Schedule</a>
+          <a href="workflow.html">Computing</a>
+          <a href="playground.html">Week 1</a>
+          <a href="labs.html">Labs</a>
+        </div>
+      </nav>
+
+      <header class="panel" style="margin-bottom: 18px">
+        <div class="kicker">Week 9 laboratory · last weekly report</div>
+        <h1>What a small n can support</h1>
+        <p class="lede">
+          A mean from twenty of your own trials is a sketch. Rewrite a Week 2
+          or Week 4 sentence so it states n, spread, and what you will not claim.
+        </p>
+      </header>
+
+      <div class="grid-2">
+        <section class="panel">
+          <div class="kicker">Demonstration</div>
+          <h2>The same process, different n</h2>
+          <p class="muted">
+            Draws from a made-up reaction-time distribution (mean 320 ms,
+            SD 40 ms). Move n and redraw. The true mean does not change.
+            Your sample mean does.
+          </p>
+          <label class="muted" style="font-family: 'Segoe UI', sans-serif">
+            n = <span id="nLabel">20</span>
+            <input type="range" id="nEl" min="5" max="200" value="20" />
+          </label>
+          <div class="actions" style="margin-top: 12px">
+            <button type="button" id="drawBtn" class="primary">Draw a new sample</button>
+          </div>
+        </section>
+        <aside class="panel">
+          <div class="kicker">This draw</div>
+          <h2 id="meanEl">—</h2>
+          <p class="muted" id="summaryEl">Sample mean versus 320 ms.</p>
+          <svg id="dots" viewBox="0 0 640 180" role="img" aria-label="Sample dots"></svg>
+        </aside>
+      </div>
+    </div>
+    <script>
+      function gauss() {
+        let u = 0, v = 0;
+        while (u === 0) u = Math.random();
+        while (v === 0) v = Math.random();
+        return Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * v);
+      }
+      function draw() {
+        const n = Number(document.getElementById("nEl").value);
+        document.getElementById("nLabel").textContent = n;
+        const xs = Array.from({ length: n }, () => 320 + 40 * gauss());
+        const m = xs.reduce((a, b) => a + b, 0) / n;
+        document.getElementById("meanEl").textContent = Math.round(m) + " ms";
+        document.getElementById("summaryEl").textContent =
+          `Sample mean is ${Math.round(m - 320)} ms from 320. n = ${n}.`;
+        const svg = document.getElementById("dots");
+        const show = xs.slice(0, 80);
+        svg.innerHTML = show.map((x, i) => {
+          const px = 40 + ((x - 200) / 240) * 560;
+          const py = 20 + (i % 10) * 14;
+          return `<circle cx="${Math.max(20, Math.min(620, px))}" cy="${py}" r="3" fill="#e8b86d"></circle>`;
+        }).join("") + `<line x1="${40 + ((320 - 200) / 240) * 560}" x2="${40 + ((320 - 200) / 240) * 560}" y1="10" y2="160" stroke="#7dd3fc" stroke-dasharray="4 4"></line>`;
+      }
+      document.getElementById("nEl").addEventListener("input", draw);
+      document.getElementById("drawBtn").addEventListener("click", draw);
+      draw();
+    </script>
+  </body>
+</html>

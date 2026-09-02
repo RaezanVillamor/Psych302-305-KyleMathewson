@@ -4,7 +4,8 @@ University of Alberta, Fall 2026. Cross-listed Science (302) and Arts (305). Wed
 
 **Canvas** is the official course (assignments, grades, announcements): course 35483.
 
-**This repository** is the laboratory handbook and the working pages. Intended public site: GitHub Pages.
+**This repository** is the laboratory handbook and the working pages:
+https://kylemath.github.io/Psych302-305-KyleMathewson/
 
 Week 0 (GitHub username) is only on Canvas: https://canvas.ualberta.ca/courses/35483/assignments/812211
 

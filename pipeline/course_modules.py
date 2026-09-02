@@ -19,7 +19,7 @@ WEEKLIES = [
         "note_path": "lab-notes/week01.md",
         "ask": "The three ways you made the page about yourself.",
         "module": "Week 1 · GitHub and playground (2 Sep)",
-        "preamble": "Tonight starts with Week 0 (GitHub username) if you have not finished it. This box is the playground report. You may use the public handbook tonight and push the note by Tuesday once your private repository exists.",
+        "preamble": "Create your own GitHub repository (or a pull request you control). Do not PR the course handbook.",
     },
     {
         "n": 2,
@@ -268,13 +268,15 @@ def run(client, notify, read_template, save_ids) -> dict:
 
     weekly_ids = {}
     weekly_tpl = read_template("weekly_report.html")
+    week1_tpl = read_template("week1_report.html")
     for row in WEEKLIES:
+        tpl = week1_tpl if row["n"] == 1 else weekly_tpl
         asg = ensure_assignment(
             notify,
             client,
             cid,
             name=row["name"],
-            description=fill(weekly_tpl, **{k: str(row[k]) for k in row}),
+            description=fill(tpl, **{k: str(row[k]) for k in row}),
             due_at=row["due"],
             points=10,
             group_id=g_week["id"],

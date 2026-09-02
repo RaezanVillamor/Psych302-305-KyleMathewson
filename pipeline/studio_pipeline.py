@@ -102,7 +102,7 @@ def cmd_week0_create(args: argparse.Namespace) -> None:
                 "grading_type": "pass_fail",
                 "published": True,
                 "allowed_attempts": -1,
-                "due_at": "2026-09-02T18:00:00-06:00",
+                "due_at": "2026-09-02T21:00:00-06:00",
                 "omit_from_final_grade": True,
                 "notify_of_update": True,
             }

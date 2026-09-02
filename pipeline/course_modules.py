@@ -18,7 +18,8 @@ WEEKLIES = [
         "lab_label": "Week 1 playground",
         "note_path": "lab-notes/week01.md",
         "ask": "Which layer you changed (HTML, CSS, or JavaScript), and what changed.",
-        "module": "Week 1 · Codespace (2 Sep)",
+        "module": "Week 1 · GitHub and playground (2 Sep)",
+        "preamble": "Tonight starts with Week 0 (GitHub username) if you have not finished it. This box is the playground report. You may use the public handbook tonight and push the note by Tuesday once your private repository exists.",
     },
     {
         "n": 2,
@@ -121,6 +122,7 @@ WEEKLIES = [
 # ensure_module matches by name. A title change creates a second module.
 # Unpublish leftovers only after the replacement exists (see run()).
 LEFTOVER_UNPUBLISH = {
+    "Week 1 · Codespace (2 Sep)",
     "Week 9 · Small n (4 Nov)",
 }
 
@@ -128,7 +130,8 @@ LEFTOVER_UNPUBLISH = {
 def fill(template: str, **kwargs: str) -> str:
     text = template
     for key, value in kwargs.items():
-        text = text.replace("{{" + key + "}}", value)
+        text = text.replace("{{" + key + "}}", str(value))
+    text = text.replace("{{preamble}}", "")
     return text
 
 
@@ -229,12 +232,39 @@ def run(client, notify, read_template, save_ids) -> dict:
             f"/courses/{cid}/assignments/{week0['id']}",
             json={
                 "assignment": {
+                    "name": "Week 0 · GitHub username",
+                    "description": read_template("week0_assignment.html"),
                     "assignment_group_id": g_gate["id"],
                     "omit_from_final_grade": True,
-                    "notify_of_update": False,
+                    "due_at": "2026-09-02T21:00:00-06:00",
+                    "notify_of_update": True,
                 }
             },
         )
+
+    notify(
+        "PUT",
+        f"/courses/{cid}/pages/introduction",
+        json={
+            "wiki_page": {
+                "title": "Introduction",
+                "body": read_template("introduction.html"),
+                "published": True,
+                "front_page": True,
+            }
+        },
+    )
+    notify(
+        "PUT",
+        f"/courses/{cid}/pages/schedule",
+        json={
+            "wiki_page": {
+                "title": "Schedule",
+                "body": read_template("schedule_page.html"),
+                "published": True,
+            }
+        },
+    )
 
     weekly_ids = {}
     weekly_tpl = read_template("weekly_report.html")
@@ -362,6 +392,16 @@ def run(client, notify, read_template, save_ids) -> dict:
             row["name"],
             {"type": "Assignment", "content_id": weekly_ids[f"week{row['n']:02d}"]["id"]},
         )
+        if row["n"] == 1 and week0:
+            items = module_items(client, cid, mod["id"])
+            ensure_item(
+                notify,
+                cid,
+                mod["id"],
+                items,
+                "Week 0 · GitHub username",
+                {"type": "Assignment", "content_id": week0["id"], "position": 1},
+            )
         if row["n"] == 8:
             items = module_items(client, cid, mod["id"])
             ensure_item(
@@ -374,12 +414,8 @@ def run(client, notify, read_template, save_ids) -> dict:
             )
         week_mods[row["n"]] = mod["id"]
 
-    # New Week 9 name now exists. Unpublish the leftover exact-name module.
     modules = client._request("GET", f"/courses/{cid}/modules", params={"per_page": 100})
-    if any(m["name"] == "Week 9 · Gamified research (4 Nov)" for m in modules):
-        unpublish_named_modules(notify, cid, modules, LEFTOVER_UNPUBLISH)
-    else:
-        print("skip leftover unpublish: new Week 9 module not found")
+    unpublish_named_modules(notify, cid, modules, LEFTOVER_UNPUBLISH)
 
     modules = client._request("GET", f"/courses/{cid}/modules", params={"per_page": 100})
     proj = ensure_module(notify, cid, modules, "Weeks 10–12 · Individual project", 11)
@@ -421,6 +457,23 @@ def run(client, notify, read_template, save_ids) -> dict:
         elif m["name"] == "Need Help?":
             set_module_published(notify, cid, m["id"], False)
 
+    night_title = "Tonight: GitHub first, then the playground"
+    night = None
+    for topic in client._request("GET", f"/courses/{cid}/discussion_topics", params={"per_page": 50, "only_announcements": True}):
+        if topic.get("title") == night_title:
+            night = topic
+            break
+    night_body = {
+        "title": night_title,
+        "message": read_template("first_night_announcement.html"),
+        "is_announcement": True,
+        "published": True,
+    }
+    if night:
+        notify("PUT", f"/courses/{cid}/discussion_topics/{night['id']}", json=night_body)
+    else:
+        night = notify("POST", f"/courses/{cid}/discussion_topics", json=night_body)
+
     try:
         notify("PUT", f"/courses/{cid}/tabs/modules", json={"hidden": False, "position": 5})
     except Exception as exc:
@@ -440,6 +493,7 @@ def run(client, notify, read_template, save_ids) -> dict:
             "start_module_id": start["id"],
             "week_module_ids": week_mods,
             "project_module_id": proj["id"],
+            "first_night_announcement_id": (night or {}).get("id"),
         }
     )
     print(json.dumps({k: ids[k] for k in ids if k != "weekly_assignments"}, indent=2))

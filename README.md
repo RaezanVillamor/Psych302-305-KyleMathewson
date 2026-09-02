@@ -12,8 +12,8 @@ Week 0 (GitHub username): https://canvas.ualberta.ca/courses/35483/assignments/8
 
 | Week | Date | Tool | Example | Page |
 | --- | --- | --- | --- | --- |
-| 0 | before 2 Sep | GitHub account | — | Canvas |
-| 1 | 2 Sep | Codespace, commit, push | A web page as a notebook | [playground.html](playground.html) |
+| 0 | 2 Sep (first hour) | GitHub account | Canvas form | [week0.html](week0.html) |
+| 1 | 2 Sep (then) | Edit a page | A web page as a notebook | [playground.html](playground.html) |
 | 2 | 9 Sep | Timed response, CSV | Simple / choice RT | [rt.html](rt.html) |
 | 3 | 16 Sep | Form and score | Short inventory | [inventory.html](inventory.html) |
 | 4 | 23 Sep | Descriptives | Mean, SD, histogram | [stats.html](stats.html) |

@@ -4,6 +4,8 @@ Private workspace for University of Alberta PSYCH 302/305, Fall 2026.
 
 ## Start here
 
+If you do not have this repository yet, use the public handbook tonight and submit Week 0 on Canvas.
+
 1. Open this repository in a GitHub Codespace: **Code → Codespaces → Create codespace**.
 2. Copilot is in the Codespace if GitHub Education is approved. **Do not buy Copilot.**
 3. Weekly lab notes live in `lab-notes/`. Copy `lab-notes/TEMPLATE.md` for a new week.

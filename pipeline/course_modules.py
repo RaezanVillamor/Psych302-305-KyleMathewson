@@ -30,8 +30,9 @@ WEEKLIES = [
         "lab": f"{BOOK}/rt.html",
         "lab_label": "Week 2 reaction time",
         "note_path": "lab-notes/week02.md",
-        "ask": "Your predicted mean, then n, mean RT, SD, and one limitation. CSV in data/.",
-        "module": "Week 2 · Reaction time (9 Sep)",
+        "ask": "Your predicted mean, then n, mean RT, SD, and one limitation. CSV in data/. First hour is the p5 studio; the report is still the RT block.",
+        "module": "Week 2 · Sketch and reaction time (9 Sep)",
+        "preamble": "First hour: <a href=\"https://kylemath.github.io/Psych302-305-KyleMathewson/p5.html\">p5.html</a> (pixels, refresh, variables, stimulus, input, one timed click). Then the real instrument on the laboratory page.",
     },
     {
         "n": 3,
@@ -123,6 +124,7 @@ WEEKLIES = [
 # Unpublish leftovers only after the replacement exists (see run()).
 LEFTOVER_UNPUBLISH = {
     "Week 1 · Codespace (2 Sep)",
+    "Week 2 · Reaction time (9 Sep)",
     "Week 4 · Descriptives (23 Sep)",
     "Week 9 · Small n (4 Nov)",
 }
@@ -378,6 +380,21 @@ def run(client, notify, read_template, save_ids) -> dict:
         modules = client._request("GET", f"/courses/{cid}/modules", params={"per_page": 100})
         mod = ensure_module(notify, cid, modules, row["module"], i)
         items = module_items(client, cid, mod["id"])
+        if row["n"] == 2:
+            ensure_item(
+                notify,
+                cid,
+                mod["id"],
+                items,
+                "Week 2 p5.js studio",
+                {
+                    "type": "ExternalUrl",
+                    "external_url": f"{BOOK}/p5.html",
+                    "new_tab": True,
+                    "position": 1,
+                },
+            )
+            items = module_items(client, cid, mod["id"])
         ensure_item(
             notify,
             cid,

@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Week 2 · p5.js studio · PSYCH 302 / 305</title>
+    <link rel="stylesheet" href="studio.css" />
+    <style>
+      .step-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin: 12px 0 0;
+      }
+      .step-row button {
+        font-family: "Segoe UI", sans-serif;
+        font-size: 0.82rem;
+      }
+      .step-row button[aria-current="true"] {
+        background: linear-gradient(135deg, var(--gold), #f3d39a);
+        color: #1c1408;
+      }
+      #sketch-host {
+        min-height: 320px;
+        border-radius: 14px;
+        background: #07090d;
+        overflow: hidden;
+      }
+      #sketch-host canvas {
+        display: block;
+        width: 100%;
+        height: auto;
+      }
+      textarea {
+        width: 100%;
+        min-height: 280px;
+        background: rgba(2, 6, 23, 0.8);
+        border: 1px solid var(--panel-border);
+        color: var(--ink);
+        border-radius: 12px;
+        padding: 12px;
+        resize: vertical;
+        font-family: "Courier New", monospace;
+        font-size: 0.82rem;
+        line-height: 1.45;
+      }
+      iframe {
+        display: block;
+        width: 100%;
+        min-height: 320px;
+        border: 0;
+        background: #07090d;
+        border-radius: 14px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <nav class="topnav">
+        <a class="brand" href="index.html">
+          <small>Week 2 · first hour · PSYCH 302 / 305</small>
+          <strong>p5.js studio</strong>
+        </a>
+        <div class="nav-links">
+          <a href="index.html">Overview</a>
+          <a href="schedule.html">Schedule</a>
+          <a href="workflow.html">Computing</a>
+          <a href="p5.html" aria-current="page">Week 2</a>
+          <a href="labs.html">Labs</a>
+        </div>
+      </nav>
+
+      <header class="panel" style="margin-bottom: 18px">
+        <div class="kicker">Week 2 · build the pieces, then measure</div>
+        <h1>A timed response is a small program</h1>
+        <p class="lede">
+          Walk these six sketches in order. Each one names a part of
+          <a href="rt.html">rt.html</a>:
+          pixels on a display, a loop that refreshes, a value in memory,
+          a stimulus, a button or key, and a clock. Then we use the real
+          instrument and export a CSV.
+        </p>
+        <div class="equation">
+          display → memory → input → time
+          <small>p5.js is the on-ramp. The graded block is still the reaction-time page.</small>
+        </div>
+        <div class="step-row" id="stepRow" role="tablist" aria-label="Studio steps"></div>
+      </header>
+
+      <div class="grid-2" style="margin-bottom: 16px">
+        <section class="panel">
+          <div class="kicker" id="stepKicker">Step 1</div>
+          <h2 id="stepTitle">Pixels on a display</h2>
+          <p class="muted" id="stepProse"></p>
+          <div class="actions" style="margin-top: 12px">
+            <button type="button" id="prevBtn" class="secondary">Previous</button>
+            <button type="button" id="nextBtn" class="primary">Next piece</button>
+          </div>
+        </section>
+        <aside class="panel">
+          <div class="kicker">Live sketch</div>
+          <h2 id="sketchLabel">Canvas</h2>
+          <div id="sketch-host" role="img" aria-label="p5.js sketch"></div>
+        </aside>
+      </div>
+
+      <div class="grid-2" style="margin-bottom: 16px">
+        <section class="panel">
+          <div class="kicker">Remix this step</div>
+          <h2>The code in memory</h2>
+          <p class="muted">
+            Change a number or a string, then Run. This is the same idea as
+            Week 1’s playground, with a canvas instead of a card.
+          </p>
+          <div class="actions" style="margin: 12px 0">
+            <button type="button" id="runBtn" class="primary">Run sketch</button>
+            <button type="button" id="resetBtn" class="secondary">Reset step</button>
+          </div>
+          <textarea id="codeInput" spellcheck="false" aria-label="p5.js sketch source"></textarea>
+        </section>
+        <aside class="panel">
+          <div class="kicker">Your run</div>
+          <h2>Preview</h2>
+          <iframe id="preview" title="p5.js preview"></iframe>
+        </aside>
+      </div>
+
+      <section class="panel" id="handoff" style="margin-bottom: 16px">
+        <div class="kicker">19:25 · the real instrument</div>
+        <h2>You have the pieces. Now collect a block.</h2>
+        <p class="muted">
+          The studio is one trial and no file. It does not exclude anticipations
+          or write a CSV.
+          <a href="rt.html">rt.html</a>
+          is the same ideas with a fixation, a random delay, twenty trials,
+          and an export. Write a predicted mean before the first scored trial.
+        </p>
+        <div class="actions" style="margin-top: 14px">
+          <a class="button primary" href="rt.html">Open the reaction-time lab</a>
+        </div>
+      </section>
+
+      <section class="grid-2" style="margin-bottom: 16px">
+        <article class="panel">
+          <div class="kicker">Words for tonight</div>
+          <h2>Lingo we will keep using</h2>
+          <ul class="muted">
+            <li><strong>String</strong> — text in quotes. A label on the canvas is a string.</li>
+            <li><strong>Variable</strong> — a named slot in memory (<code>let rt = 0</code>).</li>
+            <li><strong>Memory</strong> — where those values live until you write a file.</li>
+            <li><strong>Display / GUI</strong> — the canvas, the mark, the buttons.</li>
+            <li><strong>Pixel</strong> — one coloured cell. A 72-pixel square is the stimulus.</li>
+            <li><strong>Refresh rate</strong> — how often <code>draw()</code> repaints (often 60 frames/s).</li>
+            <li><strong>Input / output</strong> — key or click in; pixels and a number out.</li>
+          </ul>
+        </article>
+        <article class="panel">
+          <div class="kicker">Class night</div>
+          <h2>Agenda</h2>
+          <div class="agenda">
+            <dl>
+              <dt>18:00 Introduction</dt>
+              <dd>A program is input, memory, and a display. We will name the parts before we measure.</dd>
+              <dt>18:10 Studio</dt>
+              <dd>Six sketches: pixels, refresh, variables, stimulus, buttons, one timed click.</dd>
+              <dt>19:15 Break</dt>
+              <dd>Predicted mean for the real block, written before the first trial.</dd>
+            </dl>
+            <dl>
+              <dt>19:25 Instrument</dt>
+              <dd>Instructor demo on <a href="rt.html">rt.html</a>, then a simple-RT block (~20 usable trials).</dd>
+              <dt>20:05 Modification</dt>
+              <dd><strong>Arts:</strong> the mark. <strong>Science:</strong> choice RT and the two means.</dd>
+              <dt>Report</dt>
+              <dd>Still the RT report: prediction, n, mean, SD, one limit, CSV in <code>data/</code>.</dd>
+            </dl>
+          </div>
+        </article>
+      </section>
+    </div>
+    <script src="vendor/p5.min.js"></script>
+    <script>
+      const host = document.getElementById("sketch-host");
+      const codeInput = document.getElementById("codeInput");
+      const preview = document.getElementById("preview");
+      const p5Url = new URL("vendor/p5.min.js", window.location.href).href;
+      let current = null;
+      let stepIndex = 0;
+
+      const steps = [
+        {
+          title: "Pixels on a display",
+          kicker: "Step 1 · graphics",
+          label: "A square is a block of pixels",
+          prose: "The canvas is a grid. fill() picks a colour; rect() paints a block. That gold square is the same kind of mark you will wait for later. Change the 72 to 24 or 120 and Run.",
+          source: `function setup() {
+  createCanvas(640, 300);
+  background(7, 9, 13);
+  noStroke();
+  fill(232, 184, 109);
+  rect(284, 114, 72, 72, 10);
+  fill(246, 241, 230);
+  text("72 × 72 pixels", 24, 32);
+}`,
+          factory: (p) => {
+            p.setup = () => {
+              p.createCanvas(size().w, 300);
+              p.background(7, 9, 13);
+              p.noStroke();
+              p.fill(232, 184, 109);
+              p.rect(p.width / 2 - 36, 114, 72, 72, 10);
+              p.fill(246, 241, 230);
+              p.text("72 × 72 pixels", 24, 32);
+            };
+          },
+        },
+        {
+          title: "Refresh rate",
+          kicker: "Step 2 · the draw loop",
+          label: "The display is redrawn many times a second",
+          prose: "draw() runs over and over. frameRate(30) is a slower movie than frameRate(60). The moving square is not one object sliding; it is a new rectangle each frame. That is why a late frame can add a few milliseconds to a measured time.",
+          source: `function setup() {
+  createCanvas(640, 300);
+  frameRate(60);
+}
+
+function draw() {
+  background(7, 9, 13);
+  noStroke();
+  fill(232, 184, 109);
+  const x = (frameCount * 3) % width;
+  rect(x, 114, 72, 72, 10);
+  fill(246, 241, 230);
+  text(Math.round(frameRate()) + " frames / s", 24, 32);
+}`,
+          factory: (p) => {
+            p.setup = () => {
+              p.createCanvas(size().w, 300);
+              p.frameRate(60);
+            };
+            p.draw = () => {
+              p.background(7, 9, 13);
+              p.noStroke();
+              p.fill(232, 184, 109);
+              p.rect((p.frameCount * 3) % p.width, 114, 72, 72, 10);
+              p.fill(246, 241, 230);
+              p.text(Math.round(p.frameRate()) + " frames / s", 24, 32);
+            };
+          },
+        },
+        {
+          title: "Variables and strings",
+          kicker: "Step 3 · memory",
+          label: "A name holds a value until you change it",
+          prose: "let label = \"wait\" stores a string. let size = 72 stores a number. Click the canvas: both values change, so the display changes. The values live in memory. They are not a file until you export one.",
+          source: `let label = "wait";
+let size = 72;
+
+function setup() {
+  createCanvas(640, 300);
+}
+
+function draw() {
+  background(7, 9, 13);
+  noStroke();
+  fill(232, 184, 109);
+  rect(width / 2 - size / 2, 150 - size / 2, size, size, 10);
+  fill(246, 241, 230);
+  text(label, 24, 32);
+}
+
+function mousePressed() {
+  label = "go";
+  size = 96;
+}`,
+          factory: (p) => {
+            let label = "wait";
+            let mark = 72;
+            p.setup = () => p.createCanvas(size().w, 300);
+            p.draw = () => {
+              p.background(7, 9, 13);
+              p.noStroke();
+              p.fill(232, 184, 109);
+              p.rect(p.width / 2 - mark / 2, 150 - mark / 2, mark, mark, 10);
+              p.fill(246, 241, 230);
+              p.text(label, 24, 32);
+            };
+            p.mousePressed = () => {
+              label = "go";
+              mark = 96;
+            };
+          },
+        },
+        {
+          title: "Display a stimulus",
+          kicker: "Step 4 · output",
+          label: "Show a mark after a delay",
+          prose: "A fixation is on screen. After a random wait, the square appears. That is output: the program decides when the display changes. Reload the step (or Run) to see a new delay. The real lab uses 800–2200 ms.",
+          source: `let showing = false;
+let showAt = 0;
+
+function setup() {
+  createCanvas(640, 300);
+  showAt = millis() + 800 + random(1400);
+}
+
+function draw() {
+  background(7, 9, 13);
+  fill(246, 241, 230);
+  if (!showing && millis() >= showAt) showing = true;
+  if (showing) {
+    noStroke();
+    fill(232, 184, 109);
+    rect(width / 2 - 36, 114, 72, 72, 10);
+    fill(246, 241, 230);
+    text("stimulus", 24, 32);
+  } else {
+    text("+", width / 2 - 6, 160);
+    text("waiting…", 24, 32);
+  }
+}`,
+          factory: (p) => {
+            let showing = false;
+            let showAt = 0;
+            p.setup = () => {
+              p.createCanvas(size().w, 300);
+              showAt = p.millis() + 800 + p.random(1400);
+            };
+            p.draw = () => {
+              p.background(7, 9, 13);
+              p.fill(246, 241, 230);
+              if (!showing && p.millis() >= showAt) showing = true;
+              if (showing) {
+                p.noStroke();
+                p.fill(232, 184, 109);
+                p.rect(p.width / 2 - 36, 114, 72, 72, 10);
+                p.fill(246, 241, 230);
+                p.text("stimulus", 24, 32);
+              } else {
+                p.text("+", p.width / 2 - 6, 160);
+                p.text("waiting…", 24, 32);
+              }
+            };
+          },
+        },
+        {
+          title: "Buttons and keys",
+          kicker: "Step 5 · input",
+          label: "A click or a space bar is input",
+          prose: "Click Start, then press space (or click the canvas) when you like. The program reads input and writes a string back to the display. A GUI is just input and output with labels. The real lab also uses F and J for choice RT.",
+          source: `let started = false;
+let message = "Click Start";
+
+function setup() {
+  createCanvas(640, 300);
+}
+
+function draw() {
+  background(7, 9, 13);
+  noStroke();
+  fill(232, 184, 109);
+  rect(24, 24, 100, 36, 8);
+  fill(28, 20, 8);
+  text("Start", 52, 48);
+  fill(246, 241, 230);
+  text(message, 24, 92);
+}
+
+function mousePressed() {
+  if (mouseX > 24 && mouseX < 124 && mouseY > 24 && mouseY < 60) {
+    started = true;
+    message = "Started. Press space or click.";
+  } else if (started) {
+    message = "Click received";
+  }
+}
+
+function keyPressed() {
+  if (started && key === " ") message = "Space received";
+}`,
+          factory: (p) => {
+            let started = false;
+            let message = "Click Start";
+            p.setup = () => p.createCanvas(size().w, 300);
+            p.draw = () => {
+              p.background(7, 9, 13);
+              p.noStroke();
+              p.fill(232, 184, 109);
+              p.rect(24, 24, 100, 36, 8);
+              p.fill(28, 20, 8);
+              p.text("Start", 52, 48);
+              p.fill(246, 241, 230);
+              p.text(message, 24, 92);
+            };
+            p.mousePressed = () => {
+              if (p.mouseX > 24 && p.mouseX < 124 && p.mouseY > 24 && p.mouseY < 60) {
+                started = true;
+                message = "Started. Press space or click.";
+              } else if (started) {
+                message = "Click received";
+              }
+            };
+            p.keyPressed = () => {
+              if (started && p.key === " ") message = "Space received";
+            };
+          },
+        },
+        {
+          title: "One timed click",
+          kicker: "Step 6 · timing",
+          label: "Store the clock when the mark appears",
+          prose: "Click Start. Wait for the square. Click (or press space). The number is millis() at the click minus millis() at onset. That value lives in a variable named rt. This is a toy: one trial, no exclusions, no CSV. The real block is the next page.",
+          source: `let state = "idle";
+let showAt = 0;
+let onset = 0;
+let rt = null;
+
+function setup() {
+  createCanvas(640, 300);
+}
+
+function draw() {
+  background(7, 9, 13);
+  noStroke();
+  fill(232, 184, 109);
+  rect(24, 24, 100, 36, 8);
+  fill(28, 20, 8);
+  text("Start", 52, 48);
+  fill(246, 241, 230);
+  if (state === "wait" && millis() >= showAt) {
+    state = "show";
+    onset = millis();
+  }
+  if (state === "show") {
+    fill(232, 184, 109);
+    rect(width / 2 - 36, 114, 72, 72, 10);
+  } else if (state === "wait") {
+    text("+", width / 2 - 6, 160);
+  }
+  fill(246, 241, 230);
+  if (rt === null) text(state, 24, 92);
+  else text("rt = " + Math.round(rt) + " ms  (toy trial)", 24, 92);
+}
+
+function mousePressed() {
+  if (mouseX > 24 && mouseX < 124 && mouseY > 24 && mouseY < 60) {
+    state = "wait";
+    rt = null;
+    showAt = millis() + 800 + random(1400);
+  } else if (state === "show") {
+    rt = millis() - onset;
+    state = "done";
+  }
+}
+
+function keyPressed() {
+  if (state === "show" && key === " ") {
+    rt = millis() - onset;
+    state = "done";
+  }
+}`,
+          factory: (p) => {
+            let state = "idle";
+            let showAt = 0;
+            let onset = 0;
+            let rt = null;
+            p.setup = () => p.createCanvas(size().w, 300);
+            p.draw = () => {
+              p.background(7, 9, 13);
+              p.noStroke();
+              p.fill(232, 184, 109);
+              p.rect(24, 24, 100, 36, 8);
+              p.fill(28, 20, 8);
+              p.text("Start", 52, 48);
+              p.fill(246, 241, 230);
+              if (state === "wait" && p.millis() >= showAt) {
+                state = "show";
+                onset = p.millis();
+              }
+              if (state === "show") {
+                p.fill(232, 184, 109);
+                p.rect(p.width / 2 - 36, 114, 72, 72, 10);
+              } else if (state === "wait") {
+                p.text("+", p.width / 2 - 6, 160);
+              }
+              p.fill(246, 241, 230);
+              if (rt === null) p.text(state, 24, 92);
+              else p.text("rt = " + Math.round(rt) + " ms  (toy trial)", 24, 92);
+            };
+            p.mousePressed = () => {
+              if (p.mouseX > 24 && p.mouseX < 124 && p.mouseY > 24 && p.mouseY < 60) {
+                state = "wait";
+                rt = null;
+                showAt = p.millis() + 800 + p.random(1400);
+              } else if (state === "show") {
+                rt = p.millis() - onset;
+                state = "done";
+              }
+            };
+            p.keyPressed = () => {
+              if (state === "show" && p.key === " ") {
+                rt = p.millis() - onset;
+                state = "done";
+              }
+            };
+          },
+        },
+      ];
+
+      function size() {
+        return { w: Math.max(320, host.clientWidth || 640) };
+      }
+
+      function runPreview() {
+        const source = codeInput.value;
+        preview.srcdoc = `<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <script src="${p5Url}"><\/script>
+  <style>html,body{margin:0;background:#07090d;overflow:hidden} canvas{display:block}</style>
+</head>
+<body>
+<script>
+${source}
+<\/script>
+</body>
+</html>`;
+      }
+
+      function showStep(index) {
+        stepIndex = (index + steps.length) % steps.length;
+        const step = steps[stepIndex];
+        document.getElementById("stepKicker").textContent = step.kicker;
+        document.getElementById("stepTitle").textContent = step.title;
+        document.getElementById("stepProse").textContent = step.prose;
+        document.getElementById("sketchLabel").textContent = step.label;
+        codeInput.value = step.source;
+        document.querySelectorAll("#stepRow button").forEach((btn, i) => {
+          btn.setAttribute("aria-current", i === stepIndex ? "true" : "false");
+        });
+        if (current) {
+          current.remove();
+          current = null;
+        }
+        host.innerHTML = "";
+        current = new p5(step.factory, host);
+        runPreview();
+        document.getElementById("nextBtn").textContent =
+          stepIndex === steps.length - 1 ? "Open the RT lab" : "Next piece";
+      }
+
+      const row = document.getElementById("stepRow");
+      steps.forEach((step, i) => {
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = "secondary";
+        btn.textContent = `${i + 1} · ${step.title}`;
+        btn.addEventListener("click", () => showStep(i));
+        row.appendChild(btn);
+      });
+
+      document.getElementById("prevBtn").addEventListener("click", () => showStep(stepIndex - 1));
+      document.getElementById("nextBtn").addEventListener("click", () => {
+        if (stepIndex === steps.length - 1) {
+          window.location.href = "rt.html";
+          return;
+        }
+        showStep(stepIndex + 1);
+      });
+      document.getElementById("runBtn").addEventListener("click", runPreview);
+      document.getElementById("resetBtn").addEventListener("click", () => showStep(stepIndex));
+
+      showStep(0);
+    </script>
+  </body>
+</html>

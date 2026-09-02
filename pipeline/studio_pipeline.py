@@ -304,6 +304,125 @@ def _copy_student_workspace(dest: Path) -> None:
     _assert_safe_template(dest)
 
 
+def _template_files() -> list[Path]:
+    _assert_safe_template(STUDENT_TEMPLATE)
+    files: list[Path] = []
+    for path in STUDENT_TEMPLATE.rglob("*"):
+        if not path.is_file():
+            continue
+        rel = path.relative_to(STUDENT_TEMPLATE)
+        parts = set(rel.parts)
+        if parts & FORBIDDEN_TEMPLATE_NAMES or path.name == ".env":
+            continue
+        files.append(rel)
+    return files
+
+
+def _repo_file_paths(full: str) -> set[str]:
+    result = _gh("api", f"repos/{full}/git/trees/HEAD?recursive=1", check=False)
+    if result.returncode != 0:
+        raise RuntimeError(result.stderr or result.stdout or f"could not list {full}")
+    payload = json.loads(result.stdout)
+    paths = set()
+    for node in payload.get("tree") or []:
+        if node.get("type") == "blob" and node.get("path"):
+            paths.add(node["path"])
+    return paths
+
+
+def _git_local_identity(dest: Path) -> None:
+    subprocess.run(["git", "config", "user.name", "kylemath"], cwd=dest, check=True, capture_output=True)
+    subprocess.run(
+        ["git", "config", "user.email", "kylemath@users.noreply.github.com"],
+        cwd=dest,
+        check=True,
+        capture_output=True,
+    )
+
+
+def build_sync_plan(rows: list[dict]) -> list[dict]:
+    """For existing minted repos, list template files that are still missing."""
+    mint_plan = build_mint_plan(rows)
+    template_files = _template_files()
+    plan = []
+    for item in mint_plan:
+        row = {
+            "canvasUserId": item["canvasUserId"],
+            "canvasName": item["canvasName"],
+            "github_username": item["github_username"],
+            "repo": item["repo"],
+            "action": None,
+            "missing": [],
+            "reason": item["reason"],
+        }
+        if item["action"] != "skip-exists":
+            row["action"] = item["action"]
+            plan.append(row)
+            continue
+        try:
+            existing = _repo_file_paths(item["repo"])
+        except RuntimeError as exc:
+            row["action"] = "error-list"
+            row["reason"] = str(exc)[:200]
+            plan.append(row)
+            continue
+        missing = [rel.as_posix() for rel in template_files if rel.as_posix() not in existing]
+        row["missing"] = missing
+        if missing:
+            row["action"] = "add-missing"
+            row["reason"] = f"{len(missing)} template file(s) absent; will add only those"
+        else:
+            row["action"] = "skip-complete"
+            row["reason"] = "all current template files already present"
+        plan.append(row)
+    return plan
+
+
+def _sync_missing_files(username: str, missing: list[str]) -> dict:
+    """Clone, copy only missing template files, commit, regular push. Never force."""
+    full = _repo_full_name(username)
+    if not missing:
+        return {"action": "skip-complete", "repo": full, "added": []}
+    with tempfile.TemporaryDirectory() as tmp:
+        dest = Path(tmp) / f"psych302-305-{username}"
+        result = _gh("repo", "clone", full, str(dest), "--", "--depth", "1", check=False)
+        if result.returncode != 0:
+            raise RuntimeError(result.stderr or result.stdout)
+        added = []
+        for rel in missing:
+            src = STUDENT_TEMPLATE / rel
+            out = dest / rel
+            if not src.is_file():
+                continue
+            if out.exists():
+                continue
+            out.parent.mkdir(parents=True, exist_ok=True)
+            shutil.copy2(src, out)
+            added.append(rel)
+        if not added:
+            return {"action": "skip-complete", "repo": full, "added": []}
+        _git_local_identity(dest)
+        subprocess.run(["git", "add", "--", *added], cwd=dest, check=True, capture_output=True)
+        staged = subprocess.run(["git", "diff", "--cached", "--name-only"], cwd=dest, check=True, capture_output=True, text=True)
+        if not staged.stdout.strip():
+            return {"action": "skip-complete", "repo": full, "added": []}
+        subprocess.run(
+            [
+                "git",
+                "commit",
+                "-m",
+                "Add Week 4 report pipeline files (missing template only; no overwrite)",
+            ],
+            cwd=dest,
+            check=True,
+            capture_output=True,
+        )
+        push = subprocess.run(["git", "push", "origin", "HEAD"], cwd=dest, check=False, capture_output=True, text=True)
+        if push.returncode != 0:
+            raise RuntimeError(push.stderr or push.stdout)
+    return {"action": "added", "repo": full, "added": added}
+
+
 def _mint_new_repo(username: str) -> dict:
     full = _repo_full_name(username)
     if _repo_exists(full):
@@ -406,6 +525,43 @@ def cmd_repos_mint(args: argparse.Namespace) -> None:
             print(f"error                    {item['canvasName']}\t{item.get('repo') or item['github_username']}\t{err[:400]}")
 
 
+def cmd_repos_sync(args: argparse.Namespace) -> None:
+    """Add missing student_template files to existing repos. Never overwrite or force-push."""
+    roster_path = OUT / "week0_roster.json"
+    if not roster_path.exists():
+        raise SystemExit("No week0_roster.json. Run week0-pull first.")
+    _assert_safe_template(STUDENT_TEMPLATE)
+    rows = json.loads(roster_path.read_text())
+    plan = build_sync_plan(rows)
+    counts: dict[str, int] = {}
+    for item in plan:
+        counts[item["action"]] = counts.get(item["action"], 0) + 1
+        extra = f"\t{', '.join(item['missing'])}" if item["missing"] else ""
+        print(
+            f"{item['action']:<24} {item['canvasUserId']}\t{item['canvasName']}\t"
+            f"{item['github_username'] or '—'}\t{item['repo'] or '—'}\t{item['reason']}{extra}"
+        )
+    print("plan  " + "  ".join(f"{k}={v}" for k, v in sorted(counts.items())))
+
+    apply = bool(args.apply) and not args.dry_run
+    if not apply:
+        print("dry-run only. Pass --apply to add missing files on action=add-missing.")
+        return
+
+    for item in plan:
+        if item["action"] != "add-missing":
+            continue
+        try:
+            result = _sync_missing_files(item["github_username"], item["missing"])
+            print(
+                f"{result['action']:<24} {item['canvasName']}\t{result['repo']}\t"
+                f"added={','.join(result.get('added') or []) or '—'}"
+            )
+        except (RuntimeError, subprocess.CalledProcessError) as exc:
+            err = getattr(exc, "stderr", None) or str(exc)
+            print(f"error                    {item['canvasName']}\t{item['repo']}\t{err[:400]}")
+
+
 def cmd_modules_create(_: argparse.Namespace) -> None:
     from course_modules import run
 
@@ -428,6 +584,10 @@ def main() -> None:
     m.add_argument("--dry-run", action="store_true", help="Print the plan only (default if --apply is omitted)")
     m.add_argument("--apply", action="store_true", help="Create private repos and add collaborators")
     m.set_defaults(func=cmd_repos_mint)
+    s = sub.add_parser("repos-sync")
+    s.add_argument("--dry-run", action="store_true", help="Print the plan only (default if --apply is omitted)")
+    s.add_argument("--apply", action="store_true", help="Add missing template files; never overwrite or force-push")
+    s.set_defaults(func=cmd_repos_sync)
     sub.add_parser("modules-create").set_defaults(func=cmd_modules_create)
     args = p.parse_args()
     args.func(args)

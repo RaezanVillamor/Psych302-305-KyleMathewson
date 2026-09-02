@@ -85,10 +85,17 @@
         <h2>Customize the starter page</h2>
         <p class="muted">
           Change it in <strong>three ways</strong> so a stranger can tell it is
-          about you. Then put the file on GitHub <em>yourself</em>: create a
-          new repository and add <code>index.html</code>, or open a pull
-          request on a repo you control. Do not open a pull request against
-          this handbook. Paste the repo or PR URL on the
+          about you. Then get it onto GitHub. Either path is fine:
+        </p>
+        <ol class="muted">
+          <li><strong>New repo.</strong> Use <strong>Save as index.html</strong>, create a repository on your account, add that file, commit, and push.</li>
+          <li><strong>Fork and PR.</strong>
+            <a href="https://github.com/kylemath/Psych302-305-KyleMathewson/fork">Fork this handbook</a>,
+            edit <code>playground.html</code> (or add your <code>index.html</code>), and open a pull request.
+            We will not merge student pages into the course site. The open PR is the proof.</li>
+        </ol>
+        <p class="muted">
+          Paste the repo or PR URL on the
           <a href="https://canvas.ualberta.ca/courses/35483/assignments/812443">Week 1 Canvas assignment</a>.
         </p>
       </section>
@@ -99,6 +106,7 @@
             <h2 style="margin: 0">Code</h2>
             <div class="actions-row">
               <button id="runButton" class="primary">Run page</button>
+              <button id="saveButton" class="secondary">Save as index.html</button>
               <button id="resetButton" class="secondary">Reset</button>
             </div>
           </div>
@@ -174,6 +182,15 @@
       }
 
       document.getElementById("runButton").addEventListener("click", renderPreview);
+      document.getElementById("saveButton").addEventListener("click", () => {
+        const blob = new Blob([codeInput.value], { type: "text/html;charset=utf-8" });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = "index.html";
+        a.click();
+        URL.revokeObjectURL(url);
+      });
       document.getElementById("resetButton").addEventListener("click", () => {
         codeInput.value = defaultPage;
         renderPreview();

@@ -19,7 +19,7 @@ WEEKLIES = [
         "note_path": "lab-notes/week01.md",
         "ask": "The three ways you made the page about yourself.",
         "module": "Week 1 · GitHub and playground (2 Sep)",
-        "preamble": "Create your own GitHub repository (or a pull request you control). Do not PR the course handbook.",
+        "preamble": "New repo with index.html, or a fork-and-PR of the handbook (we will not merge).",
     },
     {
         "n": 2,

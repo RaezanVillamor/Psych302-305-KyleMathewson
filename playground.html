@@ -316,6 +316,9 @@ AI disclosure: no Copilot tonight</pre>
     function moveFlag() {
     x = Math.random() * 350;
     y = Math.random() * 180;
+
+    flag.style.left = x + "px";
+     flag.style.right = y + "px";
     }
 
   startButton.addEventListener("click", function() {

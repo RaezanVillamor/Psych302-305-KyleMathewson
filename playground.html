@@ -318,7 +318,7 @@ AI disclosure: no Copilot tonight</pre>
     y = Math.random() * 180;
 
     flag.style.left = x + "px";
-     flag.style.right = y + "px";
+    flag.style.top = y + "px";
     }
 
   startButton.addEventListener("click", function() {
@@ -331,6 +331,13 @@ AI disclosure: no Copilot tonight</pre>
   flag.style.display = "block";
 
   moveFlag();
+  });
+
+  flag.addEventListener("click", function() {
+    score++;
+    scoreText.textContent = score;
+    moveFlag();
+
   });
 
   <\/script>

@@ -269,7 +269,7 @@ AI disclosure: no Copilot tonight</pre>
     </p>
 
     <hr>
-
+<p> Play this quick little game I made! </p>
   <h2> Catch the Flag </h2>
   <p>
     Score: <span id = "score"> 0 </span>
@@ -331,6 +331,18 @@ AI disclosure: no Copilot tonight</pre>
   flag.style.display = "block";
 
   moveFlag();
+
+  timer = setInterval(function() {
+  time--;
+
+  timeText.textContent = time;
+  if(time <=0) {
+    clearInterval(timer);
+    flag.style.display = "none";
+    alert("Game over! Score: " + score);
+  }
+
+  }, 1000);
   });
 
   flag.addEventListener("click", function() {

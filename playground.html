@@ -302,6 +302,21 @@ AI disclosure: no Copilot tonight</pre>
       const random = Math.floor(Math.random() * facts.length);
       fact.textContent = facts[random];
     });
+
+    const startButton = document.getElementbyId("startButton");
+    const flag = document.getElementbyId("flag");
+    const gameArea = document.getElementbyId("gameArea");
+
+    const scoreText = document.getElementbyId("score");
+    const timeText = document.getElementbyId("time");
+
+    let score = 0;
+    let time = 10;
+
+    function moveFlag() {
+    x = Math.Random() * 350;
+    y = Math.Random() * 180;
+    }
   <\/script>
 
 </body>

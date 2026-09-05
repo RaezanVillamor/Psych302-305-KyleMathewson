@@ -317,6 +317,19 @@ AI disclosure: no Copilot tonight</pre>
     x = Math.Random() * 350;
     y = Math.Random() * 180;
     }
+
+  startButton.addEventListener("click", function() {
+  score = 0;
+  time = 10;
+
+  scoreText.textContent = score;
+  timeText.textContent = time;
+
+  flag.style.display = "block";
+
+  moveFlag();
+  });
+
   <\/script>
 
 </body>

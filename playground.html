@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -100,9 +101,20 @@
             This is practice — and a contest. The instructor will merge the coolest one as the new default homepage of the class site.</li>
         </ol>
         <p class="muted">
-          Paste all four links on the
-          <a href="https://canvas.ualberta.ca/courses/35483/assignments/812443">Week 1 Canvas assignment</a>.
+          <strong>GitHub is the work. Canvas is the hand-in.</strong>
+          A live page is not submitted until you paste the four links on
+          <a href="https://canvas.ualberta.ca/courses/35483/assignments/812443">Week 1 · Laboratory report</a>
+          and click Submit. Do not use the Week 0 box.
         </p>
+        <pre class="muted" style="white-space: pre-wrap; font-size: 0.86rem">Own repo: https://github.com/YOURUSER/YOURREPO
+Pages: https://YOURUSER.github.io/YOURREPO/
+Fork: https://github.com/YOURUSER/Psych302-305-KyleMathewson
+Pull request: https://github.com/kylemath/Psych302-305-KyleMathewson/pull/NN
+Three changes:
+1.
+2.
+3.
+AI disclosure: no Copilot tonight</pre>
         <p class="muted">
           Before you start, we will open a few published pages from past
           courses:
@@ -138,11 +150,12 @@
       </div>
 
       <p class="muted" style="margin-top: 16px">
-        Due Tuesday 8 September, 17:00: own-repo URL, Pages URL, fork URL,
-        pull-request URL, the three changes, and the disclosure. Tonight we
-        also discuss
-        <a href="workflow.html#agentic">agentic coding</a>:
-        you stay the author.
+          Due Tuesday 8 September, 17:00: own-repo URL, Pages URL, fork URL,
+          pull-request URL, the three changes, and the disclosure. Paste those
+          on the Canvas assignment — a live page is not the submission. We
+          also discuss
+          <a href="workflow.html#agentic">agentic coding</a>:
+          you stay the author.
       </p>
     </div>
 
@@ -152,47 +165,114 @@
 <head>
   <style>
     body {
-      font-family: Georgia, serif;
+      margin: 0;
+      min-height: 100vh;
       display: grid;
       place-items: center;
-      min-height: 100vh;
-      margin: 0;
       background: #0b0f14;
-      color: #f6f1e6;
+      color: white;
+      font-family: Arial, sans-serif;
     }
+
     .card {
-      background: #1a2230;
-      padding: 28px 32px;
+      width: 420px;
+      max-width: 85%;
+      background: #151c26;
+      padding: 30px;
       border-radius: 20px;
       text-align: center;
-      max-width: 420px;
+      border: 1px solid #2ee59d;
+      box-shadow: 0 0 30px rgba(46, 229, 157, 0.1);
     }
-    button {
-      background: #e8b86d;
-      color: #1c1408;
-      border: none;
-      padding: 10px 18px;
+
+    h1 {
+      margin-bottom: 5px;
+      font-size: 40px;
+    }
+
+    .green {
+      color: #2ee59d;
+    }
+
+    p {
+      color: #b8c1cc;
+      line-height: 1.5;
+    }
+
+    .tags {
+      margin: 20px 0;
+    }
+
+    .tag {
+      display: inline-block;
+      background: #202a36;
+      padding: 6px 10px;
+      margin: 4px;
       border-radius: 10px;
+      font-size: 12px;
+    }
+
+    button {
+      background: #2ee59d;
+      color: #07100c;
+      border: none;
+      padding: 10px 16px;
+      border-radius: 8px;
       font-weight: bold;
       cursor: pointer;
     }
+
+    #fact {
+      min-height: 40px;
+      margin-top: 18px;
+      color: white;
+    }
   </style>
 </head>
+
 <body>
+
   <div class="card">
-    <h1>Hello, I am a student</h1>
-    <p>Replace this sentence with something true about you.</p>
-    <p id="detail">A second fact can go here.</p>
-    <button id="more">Click for a third fact</button>
+    <h1>Hi, I'm <span class="green">Rae</span></h1>
+
+    <p>
+      I'm a Computing Science student at the University of Alberta.
+      I'm interested in cybersecurity, psychology, and technology.
+    </p>
+
+    <div class="tags">
+      <span class="tag">Cybersecurity</span>
+      <span class="tag">CTFs</span>
+      <span class="tag">Rock Climbing</span>
+      <span class="tag">Cycling</span>
+      <span class="tag">Cats</span>
+    </div>
+
+    <button id="button">Random Fact</button>
+
+    <p id="fact">
+      Click the button to learn something about me.
+    </p>
   </div>
+
   <script>
-    const button = document.getElementById("more");
-    button.addEventListener("click", () => {
-      document.getElementById("detail").textContent =
-        "I clicked this button in class.";
-      button.textContent = "Thanks";
+    const facts = [
+      "I have two cats named Snufkin and Zoro.",
+      "I enjoy rock climbing.",
+      "I like cycling.",
+      "I compete in cybersecurity CTFs.",
+      "Cybersecurity is one of my biggest interests."
+    ];
+
+    const button = document.getElementById("button");
+    const fact = document.getElementById("fact");
+
+    button.addEventListener("click", function() {
+      const random = Math.floor(Math.random() * facts.length);
+      fact.textContent = facts[random];
     });
   <\/script>
+
 </body>
 </html>`;
 

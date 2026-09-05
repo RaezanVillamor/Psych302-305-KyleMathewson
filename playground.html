@@ -274,7 +274,7 @@ AI disclosure: no Copilot tonight</pre>
   <p>
     Score: <span id = "score"> 0 </span>
     |
-    Time: <span id="time" 10 </span>
+    Time: <span id="time"> 10 </span>
 
   </p>
 
@@ -303,19 +303,19 @@ AI disclosure: no Copilot tonight</pre>
       fact.textContent = facts[random];
     });
 
-    const startButton = document.getElementbyId("startButton");
-    const flag = document.getElementbyId("flag");
-    const gameArea = document.getElementbyId("gameArea");
+    const startButton = document.getElementById("startButton");
+    const flag = document.getElementById("flag");
+    const gameArea = document.getElementById("gameArea");
 
-    const scoreText = document.getElementbyId("score");
-    const timeText = document.getElementbyId("time");
+    const scoreText = document.getElementById("score");
+    const timeText = document.getElementById("time");
 
     let score = 0;
     let time = 10;
 
     function moveFlag() {
-    x = Math.Random() * 350;
-    y = Math.Random() * 180;
+    x = Math.random() * 350;
+    y = Math.random() * 180;
     }
 
   startButton.addEventListener("click", function() {
